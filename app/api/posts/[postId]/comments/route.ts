@@ -2,10 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/app/lib/prisma";
 import { verifyToken } from "@/app/lib/auth";
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: { postId: string } }
-) {
+export async function POST(request: NextRequest, { params }: { params: any }) {
   try {
     const token = request.cookies.get("auth-token")?.value;
 

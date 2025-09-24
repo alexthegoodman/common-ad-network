@@ -7,10 +7,7 @@ import {
   calculateTrustScore,
 } from "@/app/lib/fraud-detection";
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { adId: string } }
-) {
+export async function GET(request: NextRequest, { params }: { params: any }) {
   try {
     const { searchParams } = new URL(request.url);
     const siteId = searchParams.get("site");

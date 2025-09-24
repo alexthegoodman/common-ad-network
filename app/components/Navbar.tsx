@@ -1,37 +1,39 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import Link from 'next/link'
-import { useAuth } from '@/contexts/AuthContext'
-import { Menu } from '@headlessui/react'
-import { 
-  House, 
-  SquaresFour, 
-  ChartLine, 
-  ChatCircle, 
-  Code, 
+import { useState } from "react";
+import Link from "next/link";
+import { useAuth } from "@/app/contexts/AuthContext";
+import { Menu } from "@headlessui/react";
+import {
+  House,
+  SquaresFour,
+  ChartLine,
+  ChatCircle,
+  Code,
   Plus,
   SignOut,
   User,
   Trophy,
-  List
-} from '@phosphor-icons/react'
+  List,
+} from "@phosphor-icons/react";
 
 export default function Navbar() {
-  const { user, logout } = useAuth()
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const { user, logout } = useAuth();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleLogout = async () => {
-    await logout()
-    window.location.href = '/'
-  }
+    await logout();
+    window.location.href = "/";
+  };
 
-  const navigation = user ? [
-    { name: 'Dashboard', href: '/dashboard', icon: ChartLine },
-    { name: 'Browse Ads', href: '/ads', icon: SquaresFour },
-    { name: 'Social Feed', href: '/feed', icon: ChatCircle },
-    { name: 'Embed Code', href: '/embed', icon: Code },
-  ] : []
+  const navigation = user
+    ? [
+        { name: "Dashboard", href: "/dashboard", icon: ChartLine },
+        { name: "Browse Ads", href: "/ads", icon: SquaresFour },
+        { name: "Social Feed", href: "/feed", icon: ChatCircle },
+        { name: "Embed Code", href: "/embed", icon: Code },
+      ]
+    : [];
 
   return (
     <nav className="bg-white border-b border-gray-200 sticky top-0 z-40">
@@ -39,11 +41,16 @@ export default function Navbar() {
         <div className="flex justify-between h-16">
           {/* Logo */}
           <div className="flex items-center">
-            <Link href={user ? '/dashboard' : '/'} className="flex items-center gap-3">
+            <Link
+              href={user ? "/dashboard" : "/"}
+              className="flex items-center gap-3"
+            >
               <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg flex items-center justify-center">
                 <SquaresFour size={20} className="text-white" weight="bold" />
               </div>
-              <span className="text-xl font-bold text-gray-900">Common Ad Network</span>
+              <span className="text-xl font-bold text-gray-900">
+                Common Ad Network
+              </span>
             </Link>
           </div>
 
@@ -51,7 +58,7 @@ export default function Navbar() {
           {user && (
             <div className="hidden md:flex items-center space-x-8">
               {navigation.map((item) => {
-                const Icon = item.icon
+                const Icon = item.icon;
                 return (
                   <Link
                     key={item.name}
@@ -61,7 +68,7 @@ export default function Navbar() {
                     <Icon size={18} />
                     {item.name}
                   </Link>
-                )
+                );
               })}
             </div>
           )}
@@ -91,7 +98,9 @@ export default function Navbar() {
                     <Menu.Item>
                       {({ active }) => (
                         <div className="px-4 py-2 border-b border-gray-100">
-                          <p className="text-sm font-medium text-gray-900">{user.companyName}</p>
+                          <p className="text-sm font-medium text-gray-900">
+                            {user.companyName}
+                          </p>
                           <p className="text-xs text-gray-500">{user.email}</p>
                         </div>
                       )}
@@ -101,7 +110,7 @@ export default function Navbar() {
                         <button
                           onClick={handleLogout}
                           className={`${
-                            active ? 'bg-gray-50' : ''
+                            active ? "bg-gray-50" : ""
                           } flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:text-red-600`}
                         >
                           <SignOut size={16} />
@@ -146,7 +155,7 @@ export default function Navbar() {
           <div className="md:hidden py-4 border-t border-gray-200">
             <div className="space-y-1">
               {navigation.map((item) => {
-                const Icon = item.icon
+                const Icon = item.icon;
                 return (
                   <Link
                     key={item.name}
@@ -157,7 +166,7 @@ export default function Navbar() {
                     <Icon size={20} />
                     {item.name}
                   </Link>
-                )
+                );
               })}
               <div className="flex items-center gap-3 px-3 py-2 mt-4 pt-4 border-t border-gray-200">
                 <Trophy size={20} className="text-primary-600" />
@@ -170,5 +179,5 @@ export default function Navbar() {
         )}
       </div>
     </nav>
-  )
+  );
 }
