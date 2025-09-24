@@ -47,11 +47,17 @@ export default function EmbedPage() {
 
   const embedCode = `<!-- Common Ad Network - Single Ad -->
 <div id="common-ad-container" data-common-ad data-site-id="${user.id}"></div>
-<script src="${baseUrl}/embed.js"></script>`;
+<Script
+  src="${baseUrl}/embed.js"
+  strategy="lazyOnload"
+/>`;
 
   const clusterEmbedCode = `<!-- Common Ad Network - Ad Cluster -->
 <div id="common-ad-cluster" data-common-ad data-site-id="${user.id}" data-ads-per-cluster="3"></div>
-<script src="${baseUrl}/embed.js"></script>`;
+<Script
+  src="${baseUrl}/embed.js"
+  strategy="lazyOnload"
+/>`;
 
   const jsCode = `// Load Single Ad
 CommonAdNetwork.loadAd('your-ad-container', '${user.id}', {
@@ -131,7 +137,8 @@ CommonAdNetwork.loadAd('your-cluster-container', '${user.id}', {
                 <li className="flex items-start gap-3">
                   <div className="w-2 h-2 bg-primary-600 rounded-full mt-2 flex-shrink-0"></div>
                   <span>
-                    <strong>Cluster limits:</strong> Max 3 clusters per page, max 4 ads per cluster
+                    <strong>Cluster limits:</strong> Max 3 clusters per page,
+                    max 4 ads per cluster
                   </span>
                 </li>
               </ul>
@@ -170,7 +177,8 @@ CommonAdNetwork.loadAd('your-cluster-container', '${user.id}', {
               Ad Cluster Embed
             </h2>
             <p className="text-gray-600 mb-4">
-              Display multiple ads in a cluster (1-4 ads per cluster, max 3 clusters per page):
+              Display multiple ads in a cluster (1-4 ads per cluster, max 3
+              clusters per page):
             </p>
 
             <div className="relative">
