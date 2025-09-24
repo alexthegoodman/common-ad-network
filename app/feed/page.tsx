@@ -1,11 +1,11 @@
-'use client'
+"use client";
 
-import { useAuth } from '@/contexts/AuthContext'
-import SocialFeed from '@/components/SocialFeed'
-import Link from 'next/link'
+import { useAuth } from "@/app/contexts/AuthContext";
+import SocialFeed from "@/app/components/SocialFeed";
+import Link from "next/link";
 
 export default function FeedPage() {
-  const { user, isLoading } = useAuth()
+  const { user, isLoading } = useAuth();
 
   if (isLoading) {
     return (
@@ -15,15 +15,19 @@ export default function FeedPage() {
           <p className="text-gray-600">Loading...</p>
         </div>
       </div>
-    )
+    );
   }
 
   if (!user) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Access Denied</h1>
-          <p className="text-gray-600 mb-6">You need to be logged in to view this page.</p>
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">
+            Access Denied
+          </h1>
+          <p className="text-gray-600 mb-6">
+            You need to be logged in to view this page.
+          </p>
           <Link
             href="/login"
             className="inline-flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
@@ -32,7 +36,7 @@ export default function FeedPage() {
           </Link>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -42,7 +46,8 @@ export default function FeedPage() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Social Feed</h1>
           <p className="text-gray-600 mt-1">
-            Connect with fellow indie makers, share ideas, and collaborate on projects.
+            Connect with fellow indie makers, share ideas, and collaborate on
+            projects.
           </p>
         </div>
 
@@ -50,5 +55,5 @@ export default function FeedPage() {
         <SocialFeed />
       </div>
     </div>
-  )
+  );
 }

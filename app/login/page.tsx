@@ -1,35 +1,35 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import Link from 'next/link'
-import { useAuth } from '@/contexts/AuthContext'
-import { Eye, EyeSlash, SignIn } from '@phosphor-icons/react'
+import { useState } from "react";
+import Link from "next/link";
+import { useAuth } from "@/app/contexts/AuthContext";
+import { Eye, EyeSlash, SignIn } from "@phosphor-icons/react";
 
 export default function LoginPage() {
-  const { login } = useAuth()
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  })
-  const [showPassword, setShowPassword] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState('')
+    email: "",
+    password: "",
+  });
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-    setError('')
+    e.preventDefault();
+    setIsLoading(true);
+    setError("");
 
-    const success = await login(formData.email, formData.password)
-    
+    const success = await login(formData.email, formData.password);
+
     if (success) {
-      window.location.href = '/dashboard'
+      window.location.href = "/dashboard";
     } else {
-      setError('Invalid email or password')
+      setError("Invalid email or password");
     }
-    
-    setIsLoading(false)
-  }
+
+    setIsLoading(false);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-accent-50 flex items-center justify-center p-4">
@@ -40,7 +40,9 @@ export default function LoginPage() {
               <SignIn size={32} className="text-white" weight="bold" />
             </div>
             <h1 className="text-2xl font-bold text-gray-900">Welcome Back</h1>
-            <p className="text-gray-600 mt-2">Sign in to your Common Ad Network account</p>
+            <p className="text-gray-600 mt-2">
+              Sign in to your Common Ad Network account
+            </p>
           </div>
 
           {error && (
@@ -51,7 +53,10 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Email Address
               </label>
               <input
@@ -59,7 +64,9 @@ export default function LoginPage() {
                 id="email"
                 required
                 value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 placeholder="you@example.com"
                 disabled={isLoading}
@@ -67,16 +74,21 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Password
               </label>
               <div className="relative">
                 <input
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? "text" : "password"}
                   id="password"
                   required
                   value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
                   className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   placeholder="Your password"
                   disabled={isLoading}
@@ -97,14 +109,17 @@ export default function LoginPage() {
               disabled={isLoading}
               className="w-full px-4 py-3 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              {isLoading ? 'Signing In...' : 'Sign In'}
+              {isLoading ? "Signing In..." : "Sign In"}
             </button>
           </form>
 
           <div className="mt-8 text-center">
             <p className="text-gray-600">
-              Don't have an account?{' '}
-              <Link href="/register" className="text-primary-600 hover:text-primary-700 font-medium">
+              Don't have an account?{" "}
+              <Link
+                href="/register"
+                className="text-primary-600 hover:text-primary-700 font-medium"
+              >
                 Sign up with invite code
               </Link>
             </p>
@@ -112,5 +127,5 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

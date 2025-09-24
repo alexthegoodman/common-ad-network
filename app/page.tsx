@@ -1,23 +1,23 @@
-'use client'
+"use client";
 
-import Link from 'next/link'
-import { useAuth } from '@/contexts/AuthContext'
-import { 
-  Trophy, 
-  Users, 
-  TrendUp, 
-  Shield, 
+import Link from "next/link";
+import { useAuth } from "@/app/contexts/AuthContext";
+import {
+  Trophy,
+  Users,
+  TrendUp,
+  Shield,
   ArrowRight,
-  CheckCircle 
-} from '@phosphor-icons/react'
+  CheckCircle,
+} from "@phosphor-icons/react";
 
 export default function Home() {
-  const { user } = useAuth()
+  const { user } = useAuth();
 
   // Redirect authenticated users to dashboard
   if (user) {
-    window.location.href = '/dashboard'
-    return null
+    window.location.href = "/dashboard";
+    return null;
   }
 
   return (
@@ -28,14 +28,15 @@ export default function Home() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-24">
           <div className="text-center">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-              The Ad Network for{' '}
+              The Ad Network for{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-accent-600">
                 Indie Makers
               </span>
             </h1>
             <p className="max-w-2xl mx-auto text-xl text-gray-600 mb-8">
-              Join the invite-only community where indie makers support each other. 
-              Earn karma by displaying ads, spend karma to promote your projects.
+              Join the invite-only community where indie makers support each
+              other. Earn karma by displaying ads, spend karma to promote your
+              projects.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Link
@@ -60,7 +61,8 @@ export default function Home() {
               How Common Ad Network Works
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              A fair, transparent ad exchange designed by indie makers, for indie makers
+              A fair, transparent ad exchange designed by indie makers, for
+              indie makers
             </p>
           </div>
 
@@ -69,9 +71,11 @@ export default function Home() {
               <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center mx-auto mb-4">
                 <Trophy size={24} className="text-primary-600" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Earn Karma</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                Earn Karma
+              </h3>
               <p className="text-gray-600 text-sm">
-                Display ads on your site and earn karma based on genuine clicks. 
+                Display ads on your site and earn karma based on genuine clicks.
                 Higher CTR = more karma rewards.
               </p>
             </div>
@@ -80,10 +84,12 @@ export default function Home() {
               <div className="w-12 h-12 bg-accent-100 rounded-xl flex items-center justify-center mx-auto mb-4">
                 <TrendUp size={24} className="text-accent-600" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Spend Karma</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                Spend Karma
+              </h3>
               <p className="text-gray-600 text-sm">
-                Use your earned karma to promote your own products across 
-                the entire network of indie maker sites.
+                Use your earned karma to promote your own products across the
+                entire network of indie maker sites.
               </p>
             </div>
 
@@ -91,10 +97,12 @@ export default function Home() {
               <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mx-auto mb-4">
                 <Shield size={24} className="text-green-600" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Fraud Protection</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                Fraud Protection
+              </h3>
               <p className="text-gray-600 text-sm">
-                Advanced click validation with IP geolocation and 
-                behavioral analysis. Only genuine clicks count.
+                Advanced click validation with IP geolocation and behavioral
+                analysis. Only genuine clicks count.
               </p>
             </div>
 
@@ -102,10 +110,12 @@ export default function Home() {
               <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-4">
                 <Users size={24} className="text-purple-600" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Community</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                Community
+              </h3>
               <p className="text-gray-600 text-sm">
-                Connect with fellow indie makers in our social feed. 
-                Share ideas, collaborate, and grow together.
+                Connect with fellow indie makers in our social feed. Share
+                ideas, collaborate, and grow together.
               </p>
             </div>
           </div>
@@ -120,26 +130,41 @@ export default function Home() {
               Fair Karma Rewards System
             </h2>
             <p className="text-lg text-gray-600">
-              Rewards scale with your site's performance, encouraging quality traffic
+              Rewards scale with your site's performance, encouraging quality
+              traffic
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center p-8 bg-gradient-to-br from-red-50 to-orange-50 rounded-2xl border border-red-100">
-              <div className="text-3xl font-bold text-red-600 mb-2">1 Karma</div>
-              <div className="text-sm font-medium text-red-700 mb-3">1% CTR</div>
-              <p className="text-sm text-red-600">Base reward for legitimate clicks</p>
+              <div className="text-3xl font-bold text-red-600 mb-2">
+                1 Karma
+              </div>
+              <div className="text-sm font-medium text-red-700 mb-3">
+                1% CTR
+              </div>
+              <p className="text-sm text-red-600">
+                Base reward for legitimate clicks
+              </p>
             </div>
 
             <div className="text-center p-8 bg-gradient-to-br from-primary-50 to-primary-100 rounded-2xl border border-primary-200">
-              <div className="text-3xl font-bold text-primary-600 mb-2">10 Karma</div>
-              <div className="text-sm font-medium text-primary-700 mb-3">5% CTR</div>
+              <div className="text-3xl font-bold text-primary-600 mb-2">
+                10 Karma
+              </div>
+              <div className="text-sm font-medium text-primary-700 mb-3">
+                5% CTR
+              </div>
               <p className="text-sm text-primary-600">Good quality traffic</p>
             </div>
 
             <div className="text-center p-8 bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl border border-green-200">
-              <div className="text-3xl font-bold text-green-600 mb-2">40 Karma</div>
-              <div className="text-sm font-medium text-green-700 mb-3">20% CTR</div>
+              <div className="text-3xl font-bold text-green-600 mb-2">
+                40 Karma
+              </div>
+              <div className="text-sm font-medium text-green-700 mb-3">
+                20% CTR
+              </div>
               <p className="text-sm text-green-600">Excellent engagement</p>
             </div>
           </div>
@@ -147,10 +172,13 @@ export default function Home() {
           <div className="mt-8 p-6 bg-accent-50 rounded-xl border border-accent-200">
             <div className="flex items-center gap-2 mb-2">
               <CheckCircle size={20} className="text-accent-600" />
-              <span className="font-semibold text-accent-900">Bonus for Smaller Sites</span>
+              <span className="font-semibold text-accent-900">
+                Bonus for Smaller Sites
+              </span>
             </div>
             <p className="text-sm text-accent-700">
-              Sites with less than 1,000 karma earn 50% bonus rewards to help level the playing field
+              Sites with less than 1,000 karma earn 50% bonus rewards to help
+              level the playing field
             </p>
           </div>
         </div>
@@ -163,7 +191,8 @@ export default function Home() {
             Ready to Join the Community?
           </h2>
           <p className="text-xl text-primary-100 mb-8">
-            Get your invite code from an existing member and start earning karma today
+            Get your invite code from an existing member and start earning karma
+            today
           </p>
           <Link
             href="/register"
@@ -184,10 +213,11 @@ export default function Home() {
             <span className="text-xl font-bold">Common Ad Network</span>
           </div>
           <p className="text-gray-400 text-sm">
-            Built by indie makers, for indie makers. Support the community that supports you.
+            Built by indie makers, for indie makers. Support the community that
+            supports you.
           </p>
         </div>
       </footer>
     </div>
-  )
+  );
 }
