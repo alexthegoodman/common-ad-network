@@ -1,0 +1,149 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { prisma } from '@/lib/prisma'
+
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { adId: string } }
+) {
+  try {
+    const { searchParams } = new URL(request.url)
+    const siteId = searchParams.get('site')
+    const clientIP = searchParams.get('ip') || 
+                    request.headers.get('x-forwarded-for') || 
+                    request.headers.get('x-real-ip') || 
+                    '127.0.0.1'
+
+    if (!siteId) {
+      return NextResponse.redirect('https://example.com') // Fallback redirect
+    }
+
+    const ad = await prisma.ad.findUnique({
+      where: { id: params.adId },
+      include: {
+        user: {
+          select: { id: true, karma: true }
+        }
+      }
+    })
+
+    if (!ad) {
+      return NextResponse.redirect('https://example.com') // Fallback redirect
+    }
+
+    // Check if this IP has already clicked this ad today (spam prevention)
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    const tomorrow = new Date(today)
+    tomorrow.setDate(tomorrow.getDate() + 1)
+
+    const existingClick = await prisma.click.findFirst({
+      where: {
+        adId: params.adId,
+        ipAddress: clientIP,
+        createdAt: {
+          gte: today,
+          lt: tomorrow
+        }
+      }
+    })
+
+    if (!existingClick) {
+      // Record the click
+      await prisma.click.create({
+        data: {
+          adId: params.adId,
+          ipAddress: clientIP,
+          userAgent: request.headers.get('user-agent') || undefined
+        }
+      })
+
+      // Update ad click count
+      await prisma.ad.update({
+        where: { id: params.adId },
+        data: {
+          clicks: {
+            increment: 1
+          }
+        }
+      })
+
+      // Deduct karma from advertiser (10 karma per click)
+      await prisma.user.update({
+        where: { id: ad.userId },
+        data: {
+          karma: {
+            decrement: 10
+          }
+        }
+      })
+
+      // Calculate karma bonus for site owner based on CTR
+      const siteOwner = await prisma.user.findUnique({
+        where: { id: siteId }
+      })
+
+      if (siteOwner) {
+        // Get recent performance to calculate CTR bonus
+        const recentImpressions = await prisma.ad.aggregate({
+          where: {
+            userId: siteId,
+            createdAt: {
+              gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) // Last 30 days
+            }
+          },
+          _sum: {
+            impressions: true
+          }
+        })
+
+        const recentClicks = await prisma.click.count({
+          where: {
+            ad: {
+              userId: siteId
+            },
+            createdAt: {
+              gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+            }
+          }
+        })
+
+        const ctr = recentImpressions._sum.impressions ? 
+          (recentClicks / recentImpressions._sum.impressions) * 100 : 0
+
+        // Karma calculation based on CTR (as specified in CLAUDE.md)
+        // 10 Karma at 5% CTR, 1 Karma at 1% CTR, 40 Karma at 20% CTR
+        let karmaEarned = 1 // Base karma
+        if (ctr >= 20) {
+          karmaEarned = 40
+        } else if (ctr >= 5) {
+          // Linear interpolation between 10 and 40 karma
+          karmaEarned = 10 + ((ctr - 5) / 15) * 30
+        } else if (ctr >= 1) {
+          // Linear interpolation between 1 and 10 karma
+          karmaEarned = 1 + ((ctr - 1) / 4) * 9
+        }
+
+        // Bonus 50% karma for smaller sites (less than 1000 karma)
+        if (siteOwner.karma < 1000) {
+          karmaEarned *= 1.5
+        }
+
+        // Award karma to site owner
+        await prisma.user.update({
+          where: { id: siteId },
+          data: {
+            karma: {
+              increment: Math.round(karmaEarned)
+            }
+          }
+        })
+      }
+    }
+
+    // Redirect to the actual ad URL
+    return NextResponse.redirect(ad.linkUrl)
+  } catch (error) {
+    console.error('Click tracking error:', error)
+    return NextResponse.redirect('https://example.com') // Fallback redirect
+  }
+}
