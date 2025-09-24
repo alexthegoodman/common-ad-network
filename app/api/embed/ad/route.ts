@@ -7,6 +7,8 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const siteId = searchParams.get("site");
     const format = searchParams.get("format") || "card";
+    const cluster = searchParams.get("cluster");
+    const index = searchParams.get("index");
 
     if (!siteId) {
       return NextResponse.json(
@@ -52,19 +54,34 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "No ads available" }, { status: 404 });
     }
 
-    // Weighted random selection based on advertiser karma (more karma = higher chance)
-    const totalKarma = activeAds.reduce(
-      (sum: any, ad: any) => sum + Math.max(ad.user.karma, 1),
-      0
-    );
-    let random = Math.random() * totalKarma;
+    // For cluster requests, ensure we don't show the same ad multiple times
+    // by using a deterministic selection based on cluster + index
+    let selectedAd;
+    
+    if (cluster && index !== null) {
+      // Use deterministic selection for clusters to avoid duplicate ads
+      const seed = cluster + index;
+      const hash = Array.from(seed).reduce((a, b) => {
+        a = ((a << 5) - a) + b.charCodeAt(0);
+        return a & a;
+      }, 0);
+      const adIndex = Math.abs(hash) % activeAds.length;
+      selectedAd = activeAds[adIndex];
+    } else {
+      // Weighted random selection based on advertiser karma (more karma = higher chance)
+      const totalKarma = activeAds.reduce(
+        (sum: any, ad: any) => sum + Math.max(ad.user.karma, 1),
+        0
+      );
+      let random = Math.random() * totalKarma;
 
-    let selectedAd = activeAds[0];
-    for (const ad of activeAds) {
-      random -= Math.max(ad.user.karma, 1);
-      if (random <= 0) {
-        selectedAd = ad;
-        break;
+      selectedAd = activeAds[0];
+      for (const ad of activeAds) {
+        random -= Math.max(ad.user.karma, 1);
+        if (random <= 0) {
+          selectedAd = ad;
+          break;
+        }
       }
     }
 

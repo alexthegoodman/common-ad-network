@@ -20,13 +20,23 @@ export default function EmbedModal({
   const baseUrl =
     process.env.NEXT_PUBLIC_BASE_URL || "https://common-ad-network.vercel.app";
 
-  const embedCode = `<!-- Common Ad Network -->
+  const embedCode = `<!-- Common Ad Network - Single Ad -->
 <div id="common-ad-container" data-common-ad data-site-id="${userId}"></div>
 <script src="${baseUrl}/embed.js"></script>`;
 
-  const jsCode = `// Load Common Ad Network
+  const clusterEmbedCode = `<!-- Common Ad Network - Ad Cluster -->
+<div id="common-ad-cluster" data-common-ad data-site-id="${userId}" data-ads-per-cluster="3"></div>
+<script src="${baseUrl}/embed.js"></script>`;
+
+  const jsCode = `// Load Single Ad
 CommonAdNetwork.loadAd('your-ad-container', '${userId}', {
   width: '400px' // optional
+});`;
+
+  const jsClusterCode = `// Load Ad Cluster
+CommonAdNetwork.loadAd('your-cluster-container', '${userId}', {
+  adsPerCluster: 3, // 1-4 ads per cluster
+  width: '1264px' // optional, adjust based on cluster size
 });`;
 
   const handleCopy = (text: string, type: string) => {
@@ -61,7 +71,7 @@ CommonAdNetwork.loadAd('your-ad-container', '${userId}', {
               </h3>
               <div className="bg-primary-50 border border-primary-200 rounded-lg p-4">
                 <ul className="space-y-2 text-sm text-primary-800">
-                  <li>• Add the embed code to your website</li>
+                  <li>• Add the embed code to your website (single ad or cluster)</li>
                   <li>
                     • Earn karma when visitors click on ads (CTR-based rewards)
                   </li>
@@ -75,17 +85,19 @@ CommonAdNetwork.loadAd('your-ad-container', '${userId}', {
                   <li>
                     • Use your karma to promote your own ads on other sites
                   </li>
+                  <li>
+                    • <strong>Cluster limits:</strong> Max 3 clusters per page, max 4 ads per cluster
+                  </li>
                 </ul>
               </div>
             </div>
 
             <div>
               <h3 className="text-lg font-medium text-gray-900 mb-3">
-                HTML Embed Code
+                Single Ad Embed
               </h3>
               <p className="text-sm text-gray-600 mb-3">
-                Copy and paste this code where you want the ad to appear on your
-                website:
+                Copy and paste this code to display a single ad:
               </p>
 
               <div className="relative">
@@ -107,7 +119,32 @@ CommonAdNetwork.loadAd('your-ad-container', '${userId}', {
 
             <div>
               <h3 className="text-lg font-medium text-gray-900 mb-3">
-                JavaScript API
+                Ad Cluster Embed
+              </h3>
+              <p className="text-sm text-gray-600 mb-3">
+                Display multiple ads in a cluster (1-4 ads per cluster, max 3 clusters per page):
+              </p>
+
+              <div className="relative">
+                <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg text-sm overflow-x-auto">
+                  <code>{clusterEmbedCode}</code>
+                </pre>
+                <button
+                  onClick={() => handleCopy(clusterEmbedCode, "cluster")}
+                  className="absolute top-3 right-3 p-2 bg-gray-700 hover:bg-gray-600 text-white rounded-md transition-colors"
+                >
+                  {copied === "cluster" ? (
+                    <CheckCircle size={16} />
+                  ) : (
+                    <Copy size={16} />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-medium text-gray-900 mb-3">
+                JavaScript API - Single Ad
               </h3>
               <p className="text-sm text-gray-600 mb-3">
                 For more control, use the JavaScript API:
@@ -122,6 +159,31 @@ CommonAdNetwork.loadAd('your-ad-container', '${userId}', {
                   className="absolute top-3 right-3 p-2 bg-gray-700 hover:bg-gray-600 text-white rounded-md transition-colors"
                 >
                   {copied === "js" ? (
+                    <CheckCircle size={16} />
+                  ) : (
+                    <Copy size={16} />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-medium text-gray-900 mb-3">
+                JavaScript API - Ad Cluster
+              </h3>
+              <p className="text-sm text-gray-600 mb-3">
+                Load multiple ads programmatically:
+              </p>
+
+              <div className="relative">
+                <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg text-sm overflow-x-auto">
+                  <code>{jsClusterCode}</code>
+                </pre>
+                <button
+                  onClick={() => handleCopy(jsClusterCode, "jscluster")}
+                  className="absolute top-3 right-3 p-2 bg-gray-700 hover:bg-gray-600 text-white rounded-md transition-colors"
+                >
+                  {copied === "jscluster" ? (
                     <CheckCircle size={16} />
                   ) : (
                     <Copy size={16} />

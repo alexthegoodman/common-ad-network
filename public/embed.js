@@ -141,8 +141,135 @@
     return container;
   }
 
+  function createClusterContainer(adsPerCluster) {
+    var cluster = document.createElement('div');
+    cluster.style.display = 'grid';
+    cluster.style.gap = '16px';
+    
+    if (adsPerCluster === 1) {
+      cluster.style.gridTemplateColumns = '1fr';
+    } else if (adsPerCluster === 2) {
+      cluster.style.gridTemplateColumns = '1fr 1fr';
+      cluster.style.maxWidth = '832px'; // 2 * 400px + 32px gap
+    } else if (adsPerCluster === 3) {
+      cluster.style.gridTemplateColumns = '1fr 1fr 1fr';
+      cluster.style.maxWidth = '1264px'; // 3 * 400px + 64px gap
+    } else if (adsPerCluster === 4) {
+      cluster.style.gridTemplateColumns = '1fr 1fr';
+      cluster.style.maxWidth = '832px';
+    }
+    
+    return cluster;
+  }
+
+  function loadAdCluster(containerId, siteId, options) {
+    options = options || {};
+    var container = document.getElementById(containerId);
+    var adsPerCluster = parseInt(options.adsPerCluster) || 1;
+    
+    if (!container) {
+      console.error('Common Ad Network: Container element not found: ' + containerId);
+      return;
+    }
+
+    if (!siteId) {
+      console.error('Common Ad Network: Site ID is required');
+      return;
+    }
+
+    // Validate cluster limits
+    if (adsPerCluster < 1 || adsPerCluster > 4) {
+      console.error('Common Ad Network: adsPerCluster must be between 1 and 4');
+      return;
+    }
+
+    // Check page-wide cluster limit
+    var existingClusters = document.querySelectorAll('[data-common-ad-cluster]').length;
+    if (existingClusters >= 3) {
+      console.error('Common Ad Network: Maximum 3 ad clusters per page allowed');
+      return;
+    }
+
+    // Mark this container as a cluster
+    container.setAttribute('data-common-ad-cluster', 'true');
+
+    // Show loading state
+    container.innerHTML = '<div style="padding: 20px; text-align: center; color: #9ca3af; font-family: ' + defaultStyles.fontFamily + ';">Loading ads...</div>';
+
+    // Create cluster container
+    var cluster = createClusterContainer(adsPerCluster);
+    
+    // Apply custom width if specified
+    if (options.width) {
+      cluster.style.maxWidth = options.width;
+    }
+
+    var loadedAds = 0;
+    var adElements = [];
+
+    function loadSingleAd(index) {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', API_BASE + '/api/embed/ad?site=' + encodeURIComponent(siteId) + '&cluster=' + encodeURIComponent(containerId) + '&index=' + index);
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+          if (xhr.status === 200) {
+            try {
+              var adData = JSON.parse(xhr.responseText);
+              var adElement = createAdElement(adData);
+              adElements[index] = adElement;
+              loadedAds++;
+              
+              // Track impression
+              if (typeof window.gtag === 'function') {
+                window.gtag('event', 'ad_impression', {
+                  'event_category': 'Common Ad Network',
+                  'event_label': adData.id
+                });
+              }
+              
+              // If all ads loaded, display the cluster
+              if (loadedAds === adsPerCluster) {
+                container.innerHTML = '';
+                for (var i = 0; i < adElements.length; i++) {
+                  if (adElements[i]) {
+                    cluster.appendChild(adElements[i]);
+                  }
+                }
+                container.appendChild(cluster);
+              }
+            } catch (error) {
+              console.error('Common Ad Network: Error parsing ad data', error);
+              loadedAds++;
+              if (loadedAds === adsPerCluster) {
+                container.innerHTML = '<div style="padding: 20px; text-align: center; color: #ef4444; font-family: ' + defaultStyles.fontFamily + ';">Failed to load ads</div>';
+              }
+            }
+          } else {
+            console.error('Common Ad Network: Failed to fetch ad', xhr.status);
+            loadedAds++;
+            if (loadedAds === adsPerCluster) {
+              container.innerHTML = '<div style="padding: 20px; text-align: center; color: #ef4444; font-family: ' + defaultStyles.fontFamily + ';">Failed to load ads</div>';
+            }
+          }
+        }
+      };
+      xhr.send();
+    }
+
+    // Load all ads in the cluster
+    for (var i = 0; i < adsPerCluster; i++) {
+      loadSingleAd(i);
+    }
+  }
+
   function loadAd(containerId, siteId, options) {
     options = options || {};
+    
+    // If adsPerCluster is specified, use cluster loading
+    if (options.adsPerCluster && parseInt(options.adsPerCluster) > 1) {
+      return loadAdCluster(containerId, siteId, options);
+    }
+    
     var container = document.getElementById(containerId);
     
     if (!container) {
@@ -199,20 +326,38 @@
   // Global API
   window.CommonAdNetwork = {
     loadAd: loadAd,
-    version: '1.0.0'
+    loadAdCluster: loadAdCluster,
+    version: '1.1.0'
   };
 
   // Auto-initialize ads with data attributes
   document.addEventListener('DOMContentLoaded', function() {
     var autoAds = document.querySelectorAll('[data-common-ad]');
+    var clusterCount = 0;
+    
     for (var i = 0; i < autoAds.length; i++) {
       var element = autoAds[i];
       var siteId = element.getAttribute('data-site-id');
       var width = element.getAttribute('data-width');
+      var adsPerCluster = element.getAttribute('data-ads-per-cluster');
       
       if (siteId) {
+        // Check cluster limits
+        if (adsPerCluster && parseInt(adsPerCluster) > 1) {
+          if (clusterCount >= 3) {
+            console.error('Common Ad Network: Maximum 3 ad clusters per page allowed');
+            continue;
+          }
+          if (parseInt(adsPerCluster) > 4) {
+            console.error('Common Ad Network: Maximum 4 ads per cluster allowed');
+            continue;
+          }
+          clusterCount++;
+        }
+        
         loadAd(element.id || 'common-ad-' + i, siteId, {
-          width: width
+          width: width,
+          adsPerCluster: adsPerCluster
         });
       }
     }
