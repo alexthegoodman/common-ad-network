@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, Suspense, useRef } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useAuth } from "@/app/contexts/AuthContext";
-import { Eye, EyeSlash, UserPlus } from "@phosphor-icons/react";
+import { Eye, EyeSlash, UserPlus, Upload } from "@phosphor-icons/react";
+import { upload } from "@vercel/blob/client";
 
 function RegisterForm() {
   const searchParams = useSearchParams();
@@ -21,7 +22,9 @@ function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Pre-fill invite code from URL
   useEffect(() => {
@@ -30,6 +33,42 @@ function RegisterForm() {
       setFormData((prev) => ({ ...prev, inviteCode: inviteFromUrl }));
     }
   }, [searchParams]);
+
+  const handleImageUpload = async (file: File) => {
+    if (!file.type.startsWith("image/")) {
+      setError("Please select a valid image file");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      setError("Image must be less than 5MB");
+      return;
+    }
+
+    setIsUploading(true);
+    setError("");
+
+    try {
+      const blob = await upload(file.name, file, {
+        access: "public",
+        handleUploadUrl: "/api/blob/upload",
+      });
+
+      setFormData({ ...formData, profilePic: blob.url });
+    } catch (err) {
+      setError("Failed to upload image. Please try again.");
+      console.error("Upload error:", err);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      handleImageUpload(file);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -186,23 +225,39 @@ function RegisterForm() {
             </div>
 
             <div>
-              <label
-                htmlFor="profilePic"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
-                Profile Picture URL (optional)
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Profile Picture (optional)
               </label>
-              <input
-                type="url"
-                id="profilePic"
-                value={formData.profilePic}
-                onChange={(e) =>
-                  setFormData({ ...formData, profilePic: e.target.value })
-                }
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                placeholder="https://example.com/avatar.jpg"
-                disabled={isLoading}
-              />
+              <div className="flex rounded-lg border border-gray-300 overflow-hidden">
+                <input
+                  type="url"
+                  value={formData.profilePic}
+                  onChange={(e) =>
+                    setFormData({ ...formData, profilePic: e.target.value })
+                  }
+                  className="flex-1 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  placeholder="Or paste image URL directly"
+                  disabled={isLoading}
+                />
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileSelect}
+                  className="hidden"
+                />
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={isUploading || isLoading}
+                  className="px-4 bg-gray-50 border-l border-gray-300 text-gray-600 hover:bg-gray-100 disabled:opacity-50 transition-colors"
+                >
+                  {isUploading ? "Uploading..." : <Upload size={16} />}
+                </button>
+              </div>
+              <p className="text-xs text-gray-500 mt-1">
+                Upload image (max 5MB) or paste URL • Recommended for better profile visibility
+              </p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

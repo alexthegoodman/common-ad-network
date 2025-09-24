@@ -63,23 +63,23 @@ async function main() {
   });
 
   // Create a sample ad for testing
-  console.log("📢 Creating sample ad...");
+  // console.log("📢 Creating sample ad...");
 
-  const sampleAd = await prisma.ad.create({
-    data: {
-      userId: adminUser.id,
-      headline: "Welcome to Common Ad Network!",
-      description:
-        "The ad exchange for indie makers. Join our community and start earning karma today!",
-      imageUrl:
-        "https://via.placeholder.com/400x300/6366f1/ffffff?text=Common+Ad+Network",
-      linkUrl: "https://common-ad-network.vercel.app",
-      impressions: 100, // Some sample data
-      clicks: 5,
-    },
-  });
+  // const sampleAd = await prisma.ad.create({
+  //   data: {
+  //     userId: adminUser.id,
+  //     headline: "Welcome to Common Ad Network!",
+  //     description:
+  //       "The ad exchange for indie makers. Join our community and start earning karma today!",
+  //     imageUrl:
+  //       "https://via.placeholder.com/400x300/6366f1/ffffff?text=Common+Ad+Network",
+  //     linkUrl: "https://common-ad-network.vercel.app",
+  //     impressions: 100, // Some sample data
+  //     clicks: 5,
+  //   },
+  // });
 
-  console.log(`✅ Sample ad created with ID: ${sampleAd.id}`);
+  // console.log(`✅ Sample ad created with ID: ${sampleAd.id}`);
 
   // Create a welcome post
   console.log("📝 Creating welcome post...");
@@ -107,7 +107,7 @@ Let's build something amazing together! 🚀`,
   console.log(`   👤 Admin user: ${adminUser.email}`);
   console.log(`   🔑 Password: ${ADMIN_PASSWORD}`);
   console.log(`   🎫 Invite codes: ${inviteCodes.length} created`);
-  console.log(`   📢 Sample ad: Created`);
+  // console.log(`   📢 Sample ad: Created`);
   console.log(`   📝 Welcome post: Created`);
 
   console.log("\n🔗 Invite URLs for sharing:");
