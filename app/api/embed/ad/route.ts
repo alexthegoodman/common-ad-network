@@ -57,12 +57,12 @@ export async function GET(request: NextRequest) {
     // For cluster requests, ensure we don't show the same ad multiple times
     // by using a deterministic selection based on cluster + index
     let selectedAd;
-    
+
     if (cluster && index !== null) {
       // Use deterministic selection for clusters to avoid duplicate ads
       const seed = cluster + index;
       const hash = Array.from(seed).reduce((a, b) => {
-        a = ((a << 5) - a) + b.charCodeAt(0);
+        a = (a << 5) - a + b.charCodeAt(0);
         return a & a;
       }, 0);
       const adIndex = Math.abs(hash) % activeAds.length;

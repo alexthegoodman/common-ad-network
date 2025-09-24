@@ -53,6 +53,7 @@ export async function POST(request: NextRequest) {
         profilePic,
         invitedBy: inviteCodeRecord.createdBy,
         isApproved: true,
+        karma: 30,
       },
     });
 

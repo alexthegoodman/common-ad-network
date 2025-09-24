@@ -15,15 +15,50 @@ import {
   User,
   Trophy,
   List,
+  UserPlus,
+  Copy,
 } from "@phosphor-icons/react";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+  const [inviteLink, setInviteLink] = useState("");
+  const [isGeneratingInvite, setIsGeneratingInvite] = useState(false);
 
   const handleLogout = async () => {
     await logout();
     window.location.href = "/";
+  };
+
+  const generateInviteLink = async () => {
+    setIsGeneratingInvite(true);
+    try {
+      const response = await fetch("/api/invite/create", {
+        method: "POST",
+        credentials: "include",
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setInviteLink(data.inviteUrl);
+        setIsInviteModalOpen(true);
+      } else {
+        console.error("Failed to generate invite link");
+      }
+    } catch (error) {
+      console.error("Error generating invite link:", error);
+    } finally {
+      setIsGeneratingInvite(false);
+    }
+  };
+
+  const copyInviteLink = async () => {
+    try {
+      await navigator.clipboard.writeText(inviteLink);
+    } catch (error) {
+      console.error("Failed to copy invite link:", error);
+    }
   };
 
   const navigation = user
@@ -108,6 +143,20 @@ export default function Navbar() {
                     <Menu.Item>
                       {({ active }) => (
                         <button
+                          onClick={generateInviteLink}
+                          disabled={isGeneratingInvite}
+                          className={`${
+                            active ? "bg-gray-50" : ""
+                          } flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:text-primary-600 disabled:opacity-50`}
+                        >
+                          <UserPlus size={16} />
+                          {isGeneratingInvite ? "Generating..." : "Invite Friend"}
+                        </button>
+                      )}
+                    </Menu.Item>
+                    <Menu.Item>
+                      {({ active }) => (
+                        <button
                           onClick={handleLogout}
                           className={`${
                             active ? "bg-gray-50" : ""
@@ -178,6 +227,43 @@ export default function Navbar() {
           </div>
         )}
       </div>
+
+      {/* Invite Modal */}
+      {isInviteModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Invite a Friend
+            </h3>
+            <p className="text-sm text-gray-600 mb-4">
+              Share this invite link with your friend to give them access to Common Ad Network.
+            </p>
+            <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg mb-4">
+              <input
+                type="text"
+                value={inviteLink}
+                readOnly
+                className="flex-1 bg-transparent text-sm text-gray-800 outline-none"
+              />
+              <button
+                onClick={copyInviteLink}
+                className="p-2 text-primary-600 hover:text-primary-700 hover:bg-primary-50 rounded transition-colors"
+                title="Copy link"
+              >
+                <Copy size={16} />
+              </button>
+            </div>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setIsInviteModalOpen(false)}
+                className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 transition-colors"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </nav>
   );
 }

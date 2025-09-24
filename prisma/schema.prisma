@@ -20,7 +20,7 @@ model User {
   companyName String
   companyLink String
   profilePic  String?
-  karma       Int      @default(0)
+  karma       Int      @default(30)
   isApproved  Boolean  @default(false)
   inviteCode  String?  @unique
   invitedBy   String?
