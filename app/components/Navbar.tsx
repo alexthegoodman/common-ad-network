@@ -1,0 +1,174 @@
+'use client'
+
+import { useState } from 'react'
+import Link from 'next/link'
+import { useAuth } from '@/contexts/AuthContext'
+import { Menu } from '@headlessui/react'
+import { 
+  House, 
+  SquaresFour, 
+  ChartLine, 
+  ChatCircle, 
+  Code, 
+  Plus,
+  SignOut,
+  User,
+  Trophy,
+  List
+} from '@phosphor-icons/react'
+
+export default function Navbar() {
+  const { user, logout } = useAuth()
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+
+  const handleLogout = async () => {
+    await logout()
+    window.location.href = '/'
+  }
+
+  const navigation = user ? [
+    { name: 'Dashboard', href: '/dashboard', icon: ChartLine },
+    { name: 'Browse Ads', href: '/ads', icon: SquaresFour },
+    { name: 'Social Feed', href: '/feed', icon: ChatCircle },
+    { name: 'Embed Code', href: '/embed', icon: Code },
+  ] : []
+
+  return (
+    <nav className="bg-white border-b border-gray-200 sticky top-0 z-40">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-16">
+          {/* Logo */}
+          <div className="flex items-center">
+            <Link href={user ? '/dashboard' : '/'} className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg flex items-center justify-center">
+                <SquaresFour size={20} className="text-white" weight="bold" />
+              </div>
+              <span className="text-xl font-bold text-gray-900">Common Ad Network</span>
+            </Link>
+          </div>
+
+          {/* Desktop Navigation */}
+          {user && (
+            <div className="hidden md:flex items-center space-x-8">
+              {navigation.map((item) => {
+                const Icon = item.icon
+                return (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
+                  >
+                    <Icon size={18} />
+                    {item.name}
+                  </Link>
+                )
+              })}
+            </div>
+          )}
+
+          {/* User Menu / Auth Buttons */}
+          <div className="flex items-center gap-4">
+            {user ? (
+              <>
+                {/* Karma Display */}
+                <div className="hidden sm:flex items-center gap-2 px-3 py-1 bg-primary-50 rounded-full">
+                  <Trophy size={16} className="text-primary-600" />
+                  <span className="text-sm font-semibold text-primary-700">
+                    {user.karma.toLocaleString()}
+                  </span>
+                </div>
+
+                {/* User Menu */}
+                <Menu as="div" className="relative">
+                  <Menu.Button className="flex items-center gap-2 p-2 text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50 rounded-lg transition-colors">
+                    <div className="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center">
+                      <User size={16} className="text-primary-600" />
+                    </div>
+                    <span className="hidden sm:block">{user.companyName}</span>
+                  </Menu.Button>
+
+                  <Menu.Items className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-200 py-1 z-50">
+                    <Menu.Item>
+                      {({ active }) => (
+                        <div className="px-4 py-2 border-b border-gray-100">
+                          <p className="text-sm font-medium text-gray-900">{user.companyName}</p>
+                          <p className="text-xs text-gray-500">{user.email}</p>
+                        </div>
+                      )}
+                    </Menu.Item>
+                    <Menu.Item>
+                      {({ active }) => (
+                        <button
+                          onClick={handleLogout}
+                          className={`${
+                            active ? 'bg-gray-50' : ''
+                          } flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:text-red-600`}
+                        >
+                          <SignOut size={16} />
+                          Sign Out
+                        </button>
+                      )}
+                    </Menu.Item>
+                  </Menu.Items>
+                </Menu>
+              </>
+            ) : (
+              <div className="flex items-center gap-3">
+                <Link
+                  href="/login"
+                  className="text-sm font-medium text-gray-700 hover:text-primary-600 transition-colors"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  href="/register"
+                  className="px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700 transition-colors"
+                >
+                  Get Started
+                </Link>
+              </div>
+            )}
+
+            {/* Mobile menu button */}
+            {user && (
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="md:hidden p-2 text-gray-600 hover:text-primary-600 transition-colors"
+              >
+                <List size={24} />
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Mobile Navigation */}
+        {user && isMobileMenuOpen && (
+          <div className="md:hidden py-4 border-t border-gray-200">
+            <div className="space-y-1">
+              {navigation.map((item) => {
+                const Icon = item.icon
+                return (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className="flex items-center gap-3 px-3 py-2 text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <Icon size={20} />
+                    {item.name}
+                  </Link>
+                )
+              })}
+              <div className="flex items-center gap-3 px-3 py-2 mt-4 pt-4 border-t border-gray-200">
+                <Trophy size={20} className="text-primary-600" />
+                <span className="text-base font-semibold text-primary-700">
+                  {user.karma.toLocaleString()} Karma
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </nav>
+  )
+}
