@@ -1,16 +1,16 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/app/lib/prisma";
 
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url)
-    const page = parseInt(searchParams.get('page') || '1')
-    const limit = parseInt(searchParams.get('limit') || '20')
-    const userId = searchParams.get('userId')
+    const { searchParams } = new URL(request.url);
+    const page = parseInt(searchParams.get("page") || "1");
+    const limit = parseInt(searchParams.get("limit") || "20");
+    const userId = searchParams.get("userId");
 
-    const skip = (page - 1) * limit
+    const skip = (page - 1) * limit;
 
-    const where = userId ? { userId } : { isActive: true }
+    const where = userId ? { userId } : { isActive: true };
 
     const [ads, total] = await Promise.all([
       prisma.ad.findMany({
@@ -19,18 +19,18 @@ export async function GET(request: NextRequest) {
           user: {
             select: {
               companyName: true,
-              profilePic: true
-            }
-          }
+              profilePic: true,
+            },
+          },
         },
         orderBy: {
-          createdAt: 'desc'
+          createdAt: "desc",
         },
         skip,
-        take: limit
+        take: limit,
       }),
-      prisma.ad.count({ where })
-    ])
+      prisma.ad.count({ where }),
+    ]);
 
     return NextResponse.json({
       ads,
@@ -38,14 +38,14 @@ export async function GET(request: NextRequest) {
         page,
         limit,
         total,
-        totalPages: Math.ceil(total / limit)
-      }
-    })
+        totalPages: Math.ceil(total / limit),
+      },
+    });
   } catch (error) {
-    console.error('Ads fetch error:', error)
+    console.error("Ads fetch error:", error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: "Internal server error" },
       { status: 500 }
-    )
+    );
   }
 }

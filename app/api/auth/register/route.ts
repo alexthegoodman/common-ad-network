@@ -1,41 +1,48 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
-import { hashPassword, createToken } from '@/lib/auth'
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/app/lib/prisma";
+import { hashPassword, createToken } from "@/app/lib/auth";
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, password, companyName, companyLink, profilePic, inviteCode } = await request.json()
+    const {
+      email,
+      password,
+      companyName,
+      companyLink,
+      profilePic,
+      inviteCode,
+    } = await request.json();
 
     if (!email || !password || !companyName || !companyLink || !inviteCode) {
       return NextResponse.json(
-        { error: 'Missing required fields' },
+        { error: "Missing required fields" },
         { status: 400 }
-      )
+      );
     }
 
     const existingUser = await prisma.user.findUnique({
-      where: { email }
-    })
+      where: { email },
+    });
 
     if (existingUser) {
       return NextResponse.json(
-        { error: 'User already exists' },
+        { error: "User already exists" },
         { status: 400 }
-      )
+      );
     }
 
     const inviteCodeRecord = await prisma.inviteCode.findUnique({
-      where: { code: inviteCode }
-    })
+      where: { code: inviteCode },
+    });
 
     if (!inviteCodeRecord || inviteCodeRecord.isUsed) {
       return NextResponse.json(
-        { error: 'Invalid or used invite code' },
+        { error: "Invalid or used invite code" },
         { status: 400 }
-      )
+      );
     }
 
-    const hashedPassword = await hashPassword(password)
+    const hashedPassword = await hashPassword(password);
 
     const user = await prisma.user.create({
       data: {
@@ -46,46 +53,46 @@ export async function POST(request: NextRequest) {
         profilePic,
         invitedBy: inviteCodeRecord.createdBy,
         isApproved: true,
-      }
-    })
+      },
+    });
 
     await prisma.inviteCode.update({
       where: { code: inviteCode },
       data: {
         isUsed: true,
         usedBy: user.id,
-        usedAt: new Date()
-      }
-    })
+        usedAt: new Date(),
+      },
+    });
 
-    const token = await createToken({ userId: user.id, email: user.email })
+    const token = await createToken({ userId: user.id, email: user.email });
 
     const response = NextResponse.json(
-      { 
-        message: 'User created successfully',
+      {
+        message: "User created successfully",
         user: {
           id: user.id,
           email: user.email,
           companyName: user.companyName,
-          karma: user.karma
-        }
+          karma: user.karma,
+        },
       },
       { status: 201 }
-    )
+    );
 
-    response.cookies.set('auth-token', token, {
+    response.cookies.set("auth-token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 60 * 60 * 24
-    })
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24,
+    });
 
-    return response
+    return response;
   } catch (error) {
-    console.error('Registration error:', error)
+    console.error("Registration error:", error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: "Internal server error" },
       { status: 500 }
-    )
+    );
   }
 }

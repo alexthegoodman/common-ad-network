@@ -1,33 +1,27 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
-import { verifyToken } from '@/lib/auth'
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/app/lib/prisma";
+import { verifyToken } from "@/app/lib/auth";
 
 export async function POST(request: NextRequest) {
   try {
-    const token = request.cookies.get('auth-token')?.value
+    const token = request.cookies.get("auth-token")?.value;
 
     if (!token) {
-      return NextResponse.json(
-        { error: 'Not authenticated' },
-        { status: 401 }
-      )
+      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
 
-    const payload = await verifyToken(token)
+    const payload = await verifyToken(token);
     if (!payload) {
-      return NextResponse.json(
-        { error: 'Invalid token' },
-        { status: 401 }
-      )
+      return NextResponse.json({ error: "Invalid token" }, { status: 401 });
     }
 
-    const { headline, description, imageUrl, linkUrl } = await request.json()
+    const { headline, description, imageUrl, linkUrl } = await request.json();
 
     if (!headline || !description || !imageUrl || !linkUrl) {
       return NextResponse.json(
-        { error: 'All fields are required' },
+        { error: "All fields are required" },
         { status: 400 }
-      )
+      );
     }
 
     const ad = await prisma.ad.create({
@@ -36,30 +30,30 @@ export async function POST(request: NextRequest) {
         headline,
         description,
         imageUrl,
-        linkUrl
+        linkUrl,
       },
       include: {
         user: {
           select: {
             companyName: true,
-            profilePic: true
-          }
-        }
-      }
-    })
+            profilePic: true,
+          },
+        },
+      },
+    });
 
     return NextResponse.json(
-      { 
-        message: 'Ad created successfully',
-        ad
+      {
+        message: "Ad created successfully",
+        ad,
       },
       { status: 201 }
-    )
+    );
   } catch (error) {
-    console.error('Ad creation error:', error)
+    console.error("Ad creation error:", error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: "Internal server error" },
       { status: 500 }
-    )
+    );
   }
 }
