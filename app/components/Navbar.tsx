@@ -17,6 +17,8 @@ import {
   List,
   UserPlus,
   Copy,
+  GithubLogoIcon,
+  XLogoIcon,
 } from "@phosphor-icons/react";
 
 export default function Navbar() {
@@ -38,7 +40,7 @@ export default function Navbar() {
         method: "POST",
         credentials: "include",
       });
-      
+
       if (response.ok) {
         const data = await response.json();
         setInviteLink(data.inviteUrl);
@@ -83,7 +85,7 @@ export default function Navbar() {
               <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg flex items-center justify-center">
                 <SquaresFour size={20} className="text-white" weight="bold" />
               </div>
-              <span className="text-xl font-bold text-gray-900">
+              <span className="text-md md:text-xl font-bold text-gray-900 word-wrap">
                 Common Ad Network
               </span>
             </Link>
@@ -150,7 +152,9 @@ export default function Navbar() {
                           } flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:text-primary-600 disabled:opacity-50`}
                         >
                           <UserPlus size={16} />
-                          {isGeneratingInvite ? "Generating..." : "Invite Friend"}
+                          {isGeneratingInvite
+                            ? "Generating..."
+                            : "Invite Friend"}
                         </button>
                       )}
                     </Menu.Item>
@@ -171,7 +175,7 @@ export default function Navbar() {
                 </Menu>
               </>
             ) : (
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 min-w-[150px]">
                 <Link
                   href="/login"
                   className="text-sm font-medium text-gray-700 hover:text-primary-600 transition-colors"
@@ -184,6 +188,17 @@ export default function Navbar() {
                 >
                   Get Started
                 </Link>
+                <div className="flex flex-row items-center gap-3">
+                  <a
+                    href="https://github.com/alexthegoodman/common-ad-network"
+                    target="_blank"
+                  >
+                    <GithubLogoIcon size={24} />
+                  </a>
+                  <a href="https://x.com/AlexTheGoodman" target="_blank">
+                    <XLogoIcon size={24} />
+                  </a>
+                </div>
               </div>
             )}
 
@@ -236,7 +251,8 @@ export default function Navbar() {
               Invite a Friend
             </h3>
             <p className="text-sm text-gray-600 mb-4">
-              Share this invite link with your friend to give them access to Common Ad Network.
+              Share this invite link with your friend to give them access to
+              Common Ad Network.
             </p>
             <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg mb-4">
               <input
