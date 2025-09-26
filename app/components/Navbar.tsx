@@ -73,7 +73,7 @@ export default function Navbar() {
     : [];
 
   return (
-    <nav className="bg-white border-b border-gray-200 sticky top-0 z-40">
+    <nav className="font-sans bg-white border-b border-gray-200 sticky top-0 z-40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           {/* Logo */}
@@ -85,7 +85,7 @@ export default function Navbar() {
               <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg flex items-center justify-center">
                 <SquaresFour size={20} className="text-white" weight="bold" />
               </div>
-              <span className="text-md md:text-xl font-bold text-gray-900 word-wrap">
+              <span className="font-serif text-md md:text-xl font-bold text-gray-900 word-wrap">
                 Common Ad Network
               </span>
             </Link>

@@ -2,6 +2,15 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { AuthProvider } from "@/app/contexts/AuthContext";
 import Navbar from "@/app/components/Navbar";
+import { DM_Serif_Display } from "next/font/google";
+import { Trophy } from "@phosphor-icons/react";
+import { Footer } from "./components/Footer";
+
+const dmSerifDisplay = DM_Serif_Display({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-sans",
+});
 
 export const metadata: Metadata = {
   title: "Common Ad Network - Ad Exchange for Indie Makers",
@@ -23,12 +32,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className="font-sans antialiased bg-gray-50">
+    <html lang="en" className={dmSerifDisplay.className}>
+      <body className="font-serif antialiased bg-gray-50">
         <AuthProvider>
           <div className="min-h-screen">
             <Navbar />
             <main>{children}</main>
+            <Footer />
           </div>
         </AuthProvider>
       </body>
