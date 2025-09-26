@@ -107,6 +107,7 @@ export default function Home() {
               )}
             </div>
           </div>
+          {/** Example Ads */}
           <div className="right w-full lg:w-1/2">
             <a
               href="https://madebycommon.com"
@@ -129,27 +130,115 @@ export default function Home() {
                 </div>
               </div>
             </a>
-            <a
-              href="https://madebycommon.com"
-              target="_blank"
-              className="ad block w-full lg:w-[408px]"
-            >
-              <img className="block w-full" src="/thermometer.png" />
-              <div className="flex flex-row justify-between font-sans bg-[#5C6657] p-4 sm:p-6 text-white text-balance">
-                <div>
-                  <span className="block text-sm sm:text-base">
-                    The Common Thermometer
-                  </span>
-                  <span className="block text-xs sm:text-sm text-gray-300">
-                    A premium thermometer with LiDAR for plant height and shape
-                    monitoring
-                  </span>
+            <div className="flex flex-col sm:flex-row">
+              <a
+                href="https://madebycommon.com"
+                target="_blank"
+                className="ad block w-full lg:w-[408px]"
+              >
+                <img className="block w-full" src="/thermometer.png" />
+                <div className="flex flex-row justify-between font-sans bg-[#5C6657] p-4 sm:p-6 text-white text-balance">
+                  <div>
+                    <span className="block text-sm sm:text-base">
+                      The Common Thermometer
+                    </span>
+                    <span className="block text-xs sm:text-sm text-gray-300">
+                      A premium thermometer with LiDAR for plant height and
+                      shape monitoring
+                    </span>
+                  </div>
+                  <div>
+                    <ArrowRightIcon size={24} className="sm:w-8 sm:h-8" />
+                  </div>
                 </div>
-                <div>
-                  <ArrowRightIcon size={24} className="sm:w-8 sm:h-8" />
-                </div>
+              </a>
+
+              {/* Text-only ads */}
+              <div>
+                <a
+                  href="http://Kan.bn"
+                  target="_blank"
+                  className="ad block w-full bg-[#FF6363] text-white p-4 sm:p-6 hover:bg-[#e55555] transition-colors"
+                >
+                  <div className="flex flex-row justify-between font-sans text-balance">
+                    <div>
+                      <span className="block text-sm sm:text-base font-semibold">
+                        Kan.bn - The Open-Source Trello
+                      </span>
+                      <span className="block text-xs sm:text-sm text-gray-200 mt-1">
+                        Very fast and easy to use like Trello, open to all
+                      </span>
+                    </div>
+                    <div>
+                      <ArrowRightIcon size={24} className="sm:w-8 sm:h-8" />
+                    </div>
+                  </div>
+                </a>
+
+                <a
+                  href="https://www.onlook.com"
+                  target="_blank"
+                  className="ad block w-full bg-[#5C6657] text-white p-4 sm:p-6 hover:bg-[#4a523f] transition-colors"
+                >
+                  <div className="flex flex-row justify-between font-sans text-balance">
+                    <div>
+                      <span className="block text-sm sm:text-base font-semibold">
+                        Onlook - The Cursor for Designers
+                      </span>
+                      <span className="block text-xs sm:text-sm text-gray-300 mt-1">
+                        This tool helps people with an idea create a working
+                        prototype and design
+                      </span>
+                    </div>
+                    <div>
+                      <ArrowRightIcon size={24} className="sm:w-8 sm:h-8" />
+                    </div>
+                  </div>
+                </a>
+
+                <a
+                  href="https://microlaunch.net"
+                  target="_blank"
+                  className="ad block w-full bg-[#3ECF8E] text-white p-4 sm:p-6 hover:bg-[#2eb377] transition-colors"
+                >
+                  <div className="flex flex-row justify-between font-sans text-balance">
+                    <div>
+                      <span className="block text-sm sm:text-base font-semibold">
+                        Microlaunch - World-Class Tech Products
+                      </span>
+                      <span className="block text-xs sm:text-sm text-gray-100 mt-1">
+                        Share your new app or product with the indie maker
+                        community
+                      </span>
+                    </div>
+                    <div>
+                      <ArrowRightIcon size={24} className="sm:w-8 sm:h-8" />
+                    </div>
+                  </div>
+                </a>
+
+                <a
+                  href="https://cal.com"
+                  target="_blank"
+                  className="ad block w-full bg-[#292929] text-white p-4 sm:p-6 hover:bg-[#1a1a1a] transition-colors"
+                >
+                  <div className="flex flex-row justify-between font-sans text-balance">
+                    <div>
+                      <span className="block text-sm sm:text-base font-semibold">
+                        Cal.com - Open Source Calendly
+                      </span>
+                      <span className="block text-xs sm:text-sm text-gray-300 mt-1">
+                        The scheduling platform that puts you in control of your
+                        time
+                      </span>
+                    </div>
+                    <div>
+                      <ArrowRightIcon size={24} className="sm:w-8 sm:h-8" />
+                    </div>
+                  </div>
+                </a>
               </div>
-            </a>
+            </div>
           </div>
         </div>
       </section>
