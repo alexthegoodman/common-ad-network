@@ -8,6 +8,7 @@ interface User {
   id: string
   companyName: string
   profilePic?: string
+  createdAt?: string
 }
 
 interface Comment {
@@ -25,8 +26,16 @@ interface Post {
   comments: Comment[]
 }
 
+interface FeedItem {
+  id: string
+  type: 'post' | 'user_joined'
+  createdAt: string
+  post?: Post
+  user?: User
+}
+
 export default function SocialFeed() {
-  const [posts, setPosts] = useState<Post[]>([])
+  const [feedItems, setFeedItems] = useState<FeedItem[]>([])
   const [newPost, setNewPost] = useState('')
   const [isLoading, setIsLoading] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -39,7 +48,28 @@ export default function SocialFeed() {
       if (!response.ok) throw new Error('Failed to fetch posts')
       
       const data = await response.json()
-      setPosts(data.posts)
+      
+      // Create feed items from posts
+      const postItems: FeedItem[] = data.posts.map((post: Post) => ({
+        id: `post-${post.id}`,
+        type: 'post' as const,
+        createdAt: post.createdAt,
+        post
+      }))
+      
+      // Create feed items from user joins
+      const userJoinItems: FeedItem[] = data.users.map((user: User) => ({
+        id: `user-joined-${user.id}`,
+        type: 'user_joined' as const,
+        createdAt: user.createdAt!,
+        user
+      }))
+      
+      // Merge and sort by date (newest first)
+      const allItems = [...postItems, ...userJoinItems]
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      
+      setFeedItems(allItems)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load posts')
     } finally {
@@ -72,7 +102,13 @@ export default function SocialFeed() {
       }
 
       const data = await response.json()
-      setPosts([data.post, ...posts])
+      const newFeedItem: FeedItem = {
+        id: `post-${data.post.id}`,
+        type: 'post',
+        createdAt: data.post.createdAt,
+        post: data.post
+      }
+      setFeedItems([newFeedItem, ...feedItems])
       setNewPost('')
     } catch (error) {
       console.error('Error creating post:', error)
@@ -83,10 +119,10 @@ export default function SocialFeed() {
   }
 
   const handleCommentAdded = (postId: string, newComment: Comment) => {
-    setPosts(posts.map(post => 
-      post.id === postId 
-        ? { ...post, comments: [...post.comments, newComment] }
-        : post
+    setFeedItems(feedItems.map(item => 
+      item.type === 'post' && item.post?.id === postId
+        ? { ...item, post: { ...item.post, comments: [...item.post.comments, newComment] } }
+        : item
     ))
   }
 
@@ -152,8 +188,8 @@ export default function SocialFeed() {
         </form>
       </div>
 
-      {/* Posts */}
-      {posts.length === 0 ? (
+      {/* Feed Items */}
+      {feedItems.length === 0 ? (
         <div className="text-center py-12">
           <div className="text-gray-500 mb-4">No posts yet</div>
           <p className="text-sm text-gray-400">
@@ -162,13 +198,46 @@ export default function SocialFeed() {
         </div>
       ) : (
         <div className="space-y-6">
-          {posts.map((post) => (
-            <PostCard 
-              key={post.id} 
-              post={post} 
-              onCommentAdded={handleCommentAdded}
-            />
-          ))}
+          {feedItems.map((item) => {
+            if (item.type === 'post' && item.post) {
+              return (
+                <PostCard 
+                  key={item.id}
+                  post={item.post} 
+                  onCommentAdded={handleCommentAdded}
+                />
+              )
+            } else if (item.type === 'user_joined' && item.user) {
+              return (
+                <div key={item.id} className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                  <div className="flex items-center gap-3">
+                    {item.user.profilePic ? (
+                      <img 
+                        src={item.user.profilePic} 
+                        alt={item.user.companyName}
+                        className="w-8 h-8 rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-8 h-8 rounded-full bg-blue-200 flex items-center justify-center">
+                        <span className="text-blue-600 font-semibold text-xs">
+                          {item.user.companyName.charAt(0).toUpperCase()}
+                        </span>
+                      </div>
+                    )}
+                    <div className="flex-1">
+                      <p className="text-sm text-blue-800">
+                        <span className="font-medium">{item.user.companyName}</span> joined the network
+                      </p>
+                      <p className="text-xs text-blue-600">
+                        {new Date(item.createdAt).toLocaleDateString()}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )
+            }
+            return null
+          })}
         </div>
       )}
     </div>

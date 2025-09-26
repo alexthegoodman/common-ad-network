@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
 
     const skip = (page - 1) * limit;
 
-    const [posts, total] = await Promise.all([
+    const [posts, total, users] = await Promise.all([
       prisma.post.findMany({
         include: {
           user: {
@@ -42,10 +42,22 @@ export async function GET(request: NextRequest) {
         take: limit,
       }),
       prisma.post.count(),
+      prisma.user.findMany({
+        select: {
+          id: true,
+          companyName: true,
+          profilePic: true,
+          createdAt: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      }),
     ]);
 
     return NextResponse.json({
       posts,
+      users,
       pagination: {
         page,
         limit,
