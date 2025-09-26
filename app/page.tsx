@@ -130,18 +130,19 @@ export default function Home() {
               </div>
             </a>
             <a
-              href="https://our-virtue.com"
+              href="https://madebycommon.com"
               target="_blank"
               className="ad block w-full lg:w-[408px]"
             >
-              <img className="block w-full" src="/ov-ad-common.png" />
+              <img className="block w-full" src="/thermometer.png" />
               <div className="flex flex-row justify-between font-sans bg-[#5C6657] p-4 sm:p-6 text-white text-balance">
                 <div>
                   <span className="block text-sm sm:text-base">
-                    Try Our Virtue
+                    The Common Thermometer
                   </span>
                   <span className="block text-xs sm:text-sm text-gray-300">
-                    Our Virtue is a book of poems covering various godly beliefs
+                    A premium thermometer with LiDAR for plant height and shape
+                    monitoring
                   </span>
                 </div>
                 <div>
