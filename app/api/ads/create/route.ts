@@ -17,9 +17,9 @@ export async function POST(request: NextRequest) {
 
     const { headline, description, imageUrl, linkUrl } = await request.json();
 
-    if (!headline || !description || !imageUrl || !linkUrl) {
+    if (!headline || !description || !linkUrl) {
       return NextResponse.json(
-        { error: "All fields are required" },
+        { error: "Headline, description, and link URL are required" },
         { status: 400 }
       );
     }

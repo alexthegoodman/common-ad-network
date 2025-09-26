@@ -7,7 +7,7 @@ interface Ad {
   id: string;
   headline: string;
   description: string;
-  imageUrl: string;
+  imageUrl?: string;
   linkUrl: string;
   impressions: number;
   clicks: number;
@@ -49,18 +49,20 @@ export default function AdCard({
       className="group bg-white rounded-xl border border-gray-200 hover:border-gray-300 hover:shadow-lg transition-all duration-200 overflow-hidden cursor-pointer"
       onClick={handleClick}
     >
-      <div className="aspect-[4/3] overflow-hidden">
-        <img
-          src={
-            imageError
-              ? "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iI2Y5ZmFmYiIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzZiNzI4MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlIG5vdCBmb3VuZDwvdGV4dD48L3N2Zz4="
-              : ad.imageUrl
-          }
-          alt={ad.headline}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-          onError={() => setImageError(true)}
-        />
-      </div>
+      {ad.imageUrl && (
+        <div className="aspect-[4/3] overflow-hidden">
+          <img
+            src={
+              imageError
+                ? "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iI2Y5ZmFmYiIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzZiNzI4MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlIG5vdCBmb3VuZDwvdGV4dD48L3N2Zz4="
+                : ad.imageUrl
+            }
+            alt={ad.headline}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            onError={() => setImageError(true)}
+          />
+        </div>
+      )}
 
       <div className="p-4">
         <div className="flex items-start gap-3 mb-3">

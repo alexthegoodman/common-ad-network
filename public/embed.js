@@ -89,16 +89,19 @@
       container.style.boxShadow = defaultStyles.container.boxShadow;
     });
 
-    // Create image
-    var image = document.createElement("img");
-    image.src = adData.imageUrl;
-    image.alt = adData.headline;
-    applyStyles(image, defaultStyles.image);
+    // Create image (only if imageUrl exists)
+    var image = null;
+    if (adData.imageUrl) {
+      image = document.createElement("img");
+      image.src = adData.imageUrl;
+      image.alt = adData.headline;
+      applyStyles(image, defaultStyles.image);
 
-    // Handle image load error
-    image.onerror = function () {
-      image.style.display = "none";
-    };
+      // Handle image load error
+      image.onerror = function () {
+        image.style.display = "none";
+      };
+    }
 
     // Create content container
     var content = document.createElement("div");
@@ -136,7 +139,9 @@
     content.appendChild(description);
     content.appendChild(footer);
 
-    container.appendChild(image);
+    if (image) {
+      container.appendChild(image);
+    }
     container.appendChild(content);
 
     return container;

@@ -167,7 +167,7 @@ export default function AddAdForm({
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Image *
+                Image
               </label>
               <div className="flex rounded-lg border border-gray-300 overflow-hidden">
                 <input
@@ -196,7 +196,7 @@ export default function AddAdForm({
                 </button>
               </div>
               <p className="text-xs text-gray-500 mt-1">
-                Upload image (max 5MB) or paste URL • Recommended: 400x300px or
+                Optional: Upload image (max 5MB) or paste URL • Recommended: 400x300px or
                 4:3 ratio
               </p>
             </div>
@@ -221,12 +221,12 @@ export default function AddAdForm({
               />
             </div>
 
-            {formData.imageUrl && (
-              <div>
-                <p className="text-sm font-medium text-gray-700 mb-2">
-                  Preview
-                </p>
-                <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
+            <div>
+              <p className="text-sm font-medium text-gray-700 mb-2">
+                Preview
+              </p>
+              <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                {formData.imageUrl && (
                   <img
                     src={formData.imageUrl}
                     alt="Ad preview"
@@ -236,15 +236,15 @@ export default function AddAdForm({
                         "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iI2Y5ZmFmYiIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzZiNzI4MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlIG5vdCBmb3VuZDwvdGV4dD48L3N2Zz4=";
                     }}
                   />
-                  <h3 className="font-semibold text-gray-900">
-                    {formData.headline || "Your headline"}
-                  </h3>
-                  <p className="text-sm text-gray-600">
-                    {formData.description || "Your description"}
-                  </p>
-                </div>
+                )}
+                <h3 className="font-semibold text-gray-900">
+                  {formData.headline || "Your headline"}
+                </h3>
+                <p className="text-sm text-gray-600">
+                  {formData.description || "Your description"}
+                </p>
               </div>
-            )}
+            </div>
 
             <div className="flex gap-3 pt-4">
               <button

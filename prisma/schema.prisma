@@ -42,7 +42,7 @@ model Ad {
   userId      String
   headline    String
   description String
-  imageUrl    String
+  imageUrl    String?
   linkUrl     String
   isActive    Boolean  @default(true)
   impressions Int      @default(0)
