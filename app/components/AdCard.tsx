@@ -92,7 +92,7 @@ export default function AdCard({
           {ad.user.profilePic && (
             <img
               src={ad.user.profilePic}
-              alt={ad.user.companyName}
+              // alt={ad.user.companyName}
               className="w-8 h-8 rounded-full"
             />
           )}
@@ -100,7 +100,7 @@ export default function AdCard({
             <h3 className="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors line-clamp-2">
               {ad.headline}
             </h3>
-            <p className="text-sm text-gray-500 mt-1">{ad.user.companyName}</p>
+            {/* <p className="text-sm text-gray-500 mt-1">{ad.user.companyName}</p> */}
           </div>
         </div>
 
