@@ -45,6 +45,7 @@ model Ad {
   imageUrl    String?
   linkUrl     String
   isActive    Boolean  @default(true)
+  isDeleted   Boolean  @default(false)
   impressions Int      @default(0)
   clicks      Int      @default(0)
   createdAt   DateTime @default(now())

@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
 
     // Get user's ads performance
     const userAds = await prisma.ad.findMany({
-      where: { userId: payload.userId },
+      where: { userId: payload.userId, isDeleted: false },
       select: {
         id: true,
         headline: true,
@@ -63,6 +63,7 @@ export async function GET(request: NextRequest) {
       where: {
         ad: {
           userId: payload.userId,
+          isDeleted: false,
         },
         createdAt: {
           gte: sevenDaysAgo,
@@ -93,6 +94,7 @@ export async function GET(request: NextRequest) {
         where: {
           ad: {
             userId: payload.userId,
+            isDeleted: false,
           },
           createdAt: {
             gte: dayStart,
@@ -133,6 +135,7 @@ export async function GET(request: NextRequest) {
       where: {
         ad: {
           userId: payload.userId,
+          isDeleted: false,
         },
         country: {
           not: null,

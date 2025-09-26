@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
 
     const skip = (page - 1) * limit;
 
-    const where = userId ? { userId } : { isActive: true };
+    const where = userId ? { userId, isDeleted: false } : { isActive: true, isDeleted: false };
 
     const [ads, total] = await Promise.all([
       prisma.ad.findMany({

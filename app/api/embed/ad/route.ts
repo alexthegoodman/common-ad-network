@@ -36,6 +36,7 @@ export async function GET(request: NextRequest) {
     const activeAds = await prisma.ad.findMany({
       where: {
         isActive: true,
+        isDeleted: false,
         NOT: {
           userId: siteId, // Don't show own ads on own site
         },

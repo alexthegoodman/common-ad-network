@@ -40,9 +40,10 @@ export async function DELETE(
       );
     }
 
-    // Delete the ad
-    await prisma.ad.delete({
-      where: { id: adId }
+    // Mark the ad as deleted
+    await prisma.ad.update({
+      where: { id: adId },
+      data: { isDeleted: true }
     });
 
     return NextResponse.json(
