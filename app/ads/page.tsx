@@ -51,7 +51,7 @@ export default function AdsPage() {
         </div>
 
         {/* Browse Ads Component */}
-        <BrowseAds />
+        <BrowseAds showAddButton={false} />
       </div>
     </div>
   );

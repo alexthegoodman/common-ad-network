@@ -20,6 +20,7 @@ import {
   GithubLogoIcon,
   XLogoIcon,
 } from "@phosphor-icons/react";
+import AddAdForm from "./AddAdForm";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -27,6 +28,7 @@ export default function Navbar() {
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
   const [inviteLink, setInviteLink] = useState("");
   const [isGeneratingInvite, setIsGeneratingInvite] = useState(false);
+  const [isAddAdFormOpen, setIsAddAdFormOpen] = useState(false);
 
   const handleLogout = async () => {
     await logout();
@@ -93,20 +95,27 @@ export default function Navbar() {
 
           {/* Desktop Navigation */}
           {user && (
-            <div className="hidden md:flex items-center space-x-8">
+            <div className="hidden md:flex items-center space-x-4">
               {navigation.map((item) => {
                 const Icon = item.icon;
                 return (
                   <Link
                     key={item.name}
                     href={item.href}
-                    className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
+                    className="flex items-center gap-2 px-2 py-2 text-sm font-small text-gray-700 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
                   >
                     <Icon size={18} />
                     {item.name}
                   </Link>
                 );
               })}
+              <button
+                onClick={() => setIsAddAdFormOpen(true)}
+                className="flex items-center gap-2 px-3 py-2 bg-primary-600 text-white text-sm font-small rounded-lg hover:bg-primary-700 transition-colors"
+              >
+                <Plus size={18} />
+                Add Ad
+              </button>
             </div>
           )}
 
@@ -232,6 +241,16 @@ export default function Navbar() {
                   </Link>
                 );
               })}
+              <button
+                onClick={() => {
+                  setIsAddAdFormOpen(true);
+                  setIsMobileMenuOpen(false);
+                }}
+                className="flex items-center gap-3 px-3 py-2 w-full text-base font-medium bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+              >
+                <Plus size={20} />
+                Add Ad
+              </button>
               <div className="flex items-center gap-3 px-3 py-2 mt-4 pt-4 border-t border-gray-200">
                 <Trophy size={20} className="text-primary-600" />
                 <span className="text-base font-semibold text-primary-700">
@@ -280,6 +299,16 @@ export default function Navbar() {
           </div>
         </div>
       )}
+
+      {/* Add Ad Form Modal */}
+      <AddAdForm
+        isOpen={isAddAdFormOpen}
+        onClose={() => setIsAddAdFormOpen(false)}
+        onSuccess={() => {
+          setIsAddAdFormOpen(false);
+          // Optionally refresh the page or show a success message
+        }}
+      />
     </nav>
   );
 }
