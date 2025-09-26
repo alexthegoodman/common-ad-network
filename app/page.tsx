@@ -10,6 +10,9 @@ import {
   ArrowRight,
   CheckCircle,
   ArrowRightIcon,
+  TrophyIcon,
+  LockIcon,
+  ChartLineUpIcon,
 } from "@phosphor-icons/react";
 
 export default function Home() {
@@ -65,6 +68,49 @@ export default function Home() {
                 <div>
                   <ArrowRightIcon size={32} />
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      {/* How It Works Section */}
+      <section className="how mt-20 mb-20">
+        <div>
+          <div className="w-[300px] text-center ml-10 bg-primary-600">
+            <h1 className="text-7xl text-accent-300">How?</h1>
+          </div>
+          <div className="flex flex-row bg-linear-to-r from=[#F9F92F] to-[#68FF42] font-sans font-medium">
+            <div className="step pt-16 pb-16 text-[#4294FF] w-1/3 flex flex-row justify-center text-center">
+              <div className="flex flex-col items-center gap-4 w-full max-w-[270px]">
+                <TrophyIcon size={48} />
+                <span className="text-lg">Earn Karma</span>
+                <hr className="w-4" />
+                <p>
+                  Display ads on your site and earn karma based on genuine
+                  clicks. Higher CTR = more karma rewards.
+                </p>
+              </div>
+            </div>
+            <div className="step pt-16 pb-16 w-1/3 flex flex-row justify-center text-center scale-110 items-center bg-[#FFE4E9] text-[#ED3C5A] border-1 border-solid border-[#ED3C5A]">
+              <div className="flex flex-col items-center gap-4 w-full max-w-[270px]">
+                <ChartLineUpIcon size={48} />
+                <span className="text-lg">Spend Karma</span>
+                <hr className="w-4" />
+                <p>
+                  Use your earned karma to promote your own products across the
+                  entire network of indie maker sites.
+                </p>
+              </div>
+            </div>
+            <div className="step pt-16 pb-16 w-1/3 flex flex-row justify-center text-center">
+              <div className="flex flex-col items-center gap-4 w-full max-w-[270px]">
+                <LockIcon size={48} />
+                <span className="text-lg">Fraud Detection</span>
+                <hr className="w-4" />
+                <p>
+                  Advanced click validation with IP geolocation and behavioral
+                  analysis. Only genuine clicks count.
+                </p>
               </div>
             </div>
           </div>
