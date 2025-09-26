@@ -108,7 +108,11 @@ export default function Home() {
             </div>
           </div>
           <div className="right w-full lg:w-1/2">
-            <div className="ad w-full">
+            <a
+              href="https://madebycommon.com"
+              target="_blank"
+              className="ad block w-full"
+            >
               <img className="block w-full" src="/stunts-ad-common.png" />
               <div className="flex flex-row justify-between font-sans bg-[#5C6657] p-4 sm:p-6 text-white text-balance">
                 <div>
@@ -124,8 +128,12 @@ export default function Home() {
                   <ArrowRightIcon size={24} className="sm:w-8 sm:h-8" />
                 </div>
               </div>
-            </div>
-            <div className="ad w-full lg:w-[408px]">
+            </a>
+            <a
+              href="https://our-virtue.com"
+              target="_blank"
+              className="ad block w-full lg:w-[408px]"
+            >
               <img className="block w-full" src="/ov-ad-common.png" />
               <div className="flex flex-row justify-between font-sans bg-[#5C6657] p-4 sm:p-6 text-white text-balance">
                 <div>
@@ -140,7 +148,7 @@ export default function Home() {
                   <ArrowRightIcon size={24} className="sm:w-8 sm:h-8" />
                 </div>
               </div>
-            </div>
+            </a>
           </div>
         </div>
       </section>
