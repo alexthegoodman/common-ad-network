@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Eye, HandPointingIcon } from "@phosphor-icons/react";
+import { Eye, HandPointingIcon, Trash } from "@phosphor-icons/react";
 
 interface Ad {
   id: string;
@@ -12,6 +12,7 @@ interface Ad {
   impressions: number;
   clicks: number;
   createdAt: string;
+  userId: string;
   user: {
     companyName: string;
     profilePic?: string;
@@ -22,12 +23,16 @@ interface AdCardProps {
   ad: Ad;
   showStats?: boolean;
   onAdClick?: (adId: string) => void;
+  currentUserId?: string;
+  onRemoveAd?: (adId: string) => void;
 }
 
 export default function AdCard({
   ad,
   showStats = false,
   onAdClick,
+  currentUserId,
+  onRemoveAd,
 }: AdCardProps) {
   const [imageError, setImageError] = useState(false);
 
@@ -39,6 +44,15 @@ export default function AdCard({
     }
   };
 
+  const handleRemoveClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onRemoveAd) {
+      onRemoveAd(ad.id);
+    }
+  };
+
+  const isOwnAd = currentUserId && ad.userId === currentUserId;
+
   const ctr =
     ad.impressions > 0
       ? ((ad.clicks / ad.impressions) * 100).toFixed(2)
@@ -46,9 +60,18 @@ export default function AdCard({
 
   return (
     <div
-      className="group bg-white rounded-xl border border-gray-200 hover:border-gray-300 hover:shadow-lg transition-all duration-200 overflow-hidden cursor-pointer"
+      className="group bg-white rounded-xl border border-gray-200 hover:border-gray-300 hover:shadow-lg transition-all duration-200 overflow-hidden cursor-pointer relative"
       onClick={handleClick}
     >
+      {isOwnAd && (
+        <button
+          onClick={handleRemoveClick}
+          className="absolute top-2 right-2 z-10 p-1.5 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors opacity-0 group-hover:opacity-100"
+          title="Remove ad"
+        >
+          <Trash size={16} />
+        </button>
+      )}
       {ad.imageUrl && (
         <div className="aspect-[4/3] overflow-hidden">
           <img

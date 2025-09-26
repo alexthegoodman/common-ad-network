@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { Plus, MagnifyingGlass } from '@phosphor-icons/react'
 import AdCard from './AdCard'
 import AddAdForm from './AddAdForm'
+import { useAuth } from '@/app/contexts/AuthContext'
 
 interface Ad {
   id: string
@@ -14,6 +15,7 @@ interface Ad {
   impressions: number
   clicks: number
   createdAt: string
+  userId: string
   user: {
     companyName: string
     profilePic?: string
@@ -31,6 +33,7 @@ export default function BrowseAds({ showMyAds = false, showAddButton = true }: B
   const [isAddFormOpen, setIsAddFormOpen] = useState(false)
   const [error, setError] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
+  const { user } = useAuth()
 
   const fetchAds = async () => {
     setIsLoading(true)
@@ -50,6 +53,21 @@ export default function BrowseAds({ showMyAds = false, showAddButton = true }: B
       setError(err instanceof Error ? err.message : 'Failed to load ads')
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  const removeAd = async (adId: string) => {
+    try {
+      const response = await fetch(`/api/ads/${adId}`, {
+        method: 'DELETE',
+      })
+      
+      if (!response.ok) throw new Error('Failed to remove ad')
+      
+      // Remove the ad from the local state
+      setAds(prevAds => prevAds.filter(ad => ad.id !== adId))
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to remove ad')
     }
   }
 
@@ -129,7 +147,13 @@ export default function BrowseAds({ showMyAds = false, showAddButton = true }: B
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredAds.map((ad) => (
-            <AdCard key={ad.id} ad={ad} showStats={showMyAds} />
+            <AdCard 
+              key={ad.id} 
+              ad={ad} 
+              showStats={showMyAds} 
+              currentUserId={user?.id}
+              onRemoveAd={removeAd}
+            />
           ))}
         </div>
       )}
