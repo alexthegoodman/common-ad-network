@@ -30,13 +30,13 @@ export default function Home() {
     <div className="bg-[#EBF1EC]">
       {/* Hero Section */}
       <section className="hero w-full">
-        <div className="flex flex-row">
-          <div className="left w-1/2 bg-primary-500 p-20">
-            <h1 className="block text-[164px] leading-[188px] text-white mb-6">
+        <div className="flex flex-col lg:flex-row">
+          <div className="left w-full lg:w-1/2 bg-primary-500 p-8 sm:p-12 lg:p-20">
+            <h1 className="block text-4xl sm:text-6xl md:text-8xl lg:text-[164px] leading-tight lg:leading-[188px] text-white mb-6">
               <span className="text-[#F1FF89]">Give</span> clicks,{" "}
               <span className="text-[#F1FF89]">Get</span> clicks
             </h1>
-            <p className="text-[24px] leading-[46px] text-white font-sans">
+            <p className="text-base sm:text-lg md:text-xl lg:text-[24px] leading-relaxed lg:leading-[46px] text-white font-sans">
               With Common Ad Network, indie makers can support each other
               through mutual advertising. By allowing ads to display on your
               site, you will earn a place on others.
@@ -44,38 +44,43 @@ export default function Home() {
             <div className="relative">
               {/** TODO: Enable Request Invite button */}
 
-              <button className="absolute top-4 bg-[#5C6657] text-white font-serif text-2xl px-8 py-4 mt-4 hover:bg-[#4a523f] transition-colors flex items-center gap-4">
-                Request Invite <MailboxIcon size={32} />
+              <button className="relative sm:absolute top-4 bg-[#5C6657] text-white font-serif text-lg sm:text-xl lg:text-2xl px-6 sm:px-8 py-3 sm:py-4 mt-4 hover:bg-[#4a523f] transition-colors flex items-center gap-4">
+                Request Invite{" "}
+                <MailboxIcon size={24} className="sm:w-8 sm:h-8" />
               </button>
             </div>
           </div>
-          <div className="right w-1/2">
+          <div className="right w-full lg:w-1/2">
             <div className="ad w-full">
-              <img className="block " src="/stunts-ad-common.png" />
-              <div className="flex flex-row justify-between font-sans bg-[#5C6657] p-6 text-white text-balance">
+              <img className="block w-full" src="/stunts-ad-common.png" />
+              <div className="flex flex-row justify-between font-sans bg-[#5C6657] p-4 sm:p-6 text-white text-balance">
                 <div>
-                  <span className="block">Stunts - Make Videos Easily</span>
-                  <span className="block text-sm text-gray-300">
+                  <span className="block text-sm sm:text-base">
+                    Stunts - Make Videos Easily
+                  </span>
+                  <span className="block text-xs sm:text-sm text-gray-300">
                     Stunts enables anyone to generate animation keyframes for
                     engaging videos
                   </span>
                 </div>
                 <div>
-                  <ArrowRightIcon size={32} />
+                  <ArrowRightIcon size={24} className="sm:w-8 sm:h-8" />
                 </div>
               </div>
             </div>
-            <div className="ad w-[408px]">
-              <img className="block " src="/ov-ad-common.png" />
-              <div className="flex flex-row justify-between font-sans bg-[#5C6657] p-6 text-white text-balance">
+            <div className="ad w-full lg:w-[408px]">
+              <img className="block w-full" src="/ov-ad-common.png" />
+              <div className="flex flex-row justify-between font-sans bg-[#5C6657] p-4 sm:p-6 text-white text-balance">
                 <div>
-                  <span className="block">Try Our Virtue</span>
-                  <span className="block text-sm text-gray-300">
+                  <span className="block text-sm sm:text-base">
+                    Try Our Virtue
+                  </span>
+                  <span className="block text-xs sm:text-sm text-gray-300">
                     Our Virtue is a book of poems covering various godly beliefs
                   </span>
                 </div>
                 <div>
-                  <ArrowRightIcon size={32} />
+                  <ArrowRightIcon size={24} className="sm:w-8 sm:h-8" />
                 </div>
               </div>
             </div>
@@ -83,40 +88,40 @@ export default function Home() {
         </div>
       </section>
       {/* How It Works Section */}
-      <section className="how mt-20 mb-20">
+      <section className="how mt-10 sm:mt-20 mb-10 sm:mb-20">
         <div>
-          <div className="w-[300px] text-center ml-10 p-4 bg-primary-500">
-            <h1 className="text-7xl text-[#F1FF89]">How?</h1>
+          <div className="w-full sm:w-[300px] text-center mx-auto sm:ml-10 p-4 bg-primary-500">
+            <h1 className="text-5xl sm:text-7xl text-[#F1FF89]">How?</h1>
           </div>
-          <div className="flex flex-row bg-linear-65 from-[rgba(249,249,47,0.5)] to-[rgba(104,255,66,0.5)] font-sans font-medium">
-            <div className="step pt-16 pb-16 text-[#4294FF] w-1/3 flex flex-row justify-center text-center">
-              <div className="flex flex-col items-center gap-4 w-full max-w-[270px]">
+          <div className="flex flex-col lg:flex-row bg-linear-65 from-[rgba(249,249,47,0.5)] to-[rgba(104,255,66,0.5)] font-sans font-medium">
+            <div className="step py-8 lg:pt-16 lg:pb-16 text-[#4294FF] w-full lg:w-1/3 flex flex-row justify-center text-center">
+              <div className="flex flex-col items-center gap-4 w-full max-w-[270px] px-4">
                 <TrophyIcon size={48} />
                 <span className="text-lg">Earn Karma</span>
                 <hr className="w-4" />
-                <p>
+                <p className="text-sm sm:text-base">
                   Display ads on your site and earn karma based on genuine
                   clicks. Higher CTR = more karma rewards.
                 </p>
               </div>
             </div>
-            <div className="step pt-16 pb-16 w-1/3 flex flex-row justify-center text-center scale-110 items-center bg-[#FFE4E9] text-[#ED3C5A] border-1 border-solid border-[#ED3C5A]">
-              <div className="flex flex-col items-center gap-4 w-full max-w-[270px]">
+            <div className="step py-8 lg:pt-16 lg:pb-16 w-full lg:w-1/3 flex flex-row justify-center text-center lg:scale-110 items-center bg-[#FFE4E9] text-[#ED3C5A] border-1 border-solid border-[#ED3C5A]">
+              <div className="flex flex-col items-center gap-4 w-full max-w-[270px] px-4">
                 <ChartLineUpIcon size={48} />
                 <span className="text-lg">Spend Karma</span>
                 <hr className="w-4" />
-                <p>
+                <p className="text-sm sm:text-base">
                   Use your earned karma to promote your own products across the
                   entire network of indie maker sites.
                 </p>
               </div>
             </div>
-            <div className="step pt-16 pb-16 w-1/3 flex flex-row justify-center text-center">
-              <div className="flex flex-col items-center gap-4 w-full max-w-[270px]">
+            <div className="step py-8 lg:pt-16 lg:pb-16 w-full lg:w-1/3 flex flex-row justify-center text-center">
+              <div className="flex flex-col items-center gap-4 w-full max-w-[270px] px-4">
                 <LockIcon size={48} />
                 <span className="text-lg">Fraud Detection</span>
                 <hr className="w-4" />
-                <p>
+                <p className="text-sm sm:text-base">
                   Advanced click validation with IP geolocation and behavioral
                   analysis. Only genuine clicks count.
                 </p>
@@ -127,25 +132,25 @@ export default function Home() {
       </section>
 
       {/* Karma System Explanation */}
-      <div className="px-10 mb-20">
+      <div className="px-4 sm:px-10 mb-10 sm:mb-20">
         <div className="">
           <div className="">
-            <h2 className="text-[128px] leading-[164px] text-primary-500">
+            <h2 className="text-4xl sm:text-6xl md:text-8xl lg:text-[128px] leading-tight lg:leading-[164px] text-primary-500">
               Fair & Balanced
             </h2>
           </div>
-          <div className="flex flex-row">
+          <div className="flex flex-col xl:flex-row">
             <div>
-              <p className="text-[128px] leading-[164px]">
+              <p className="text-4xl sm:text-6xl md:text-8xl lg:text-[128px] leading-tight lg:leading-[164px]">
                 Karma
                 <br />
                 System
               </p>
             </div>
-            <div className="flex-grow pl-10 pt-4">
-              <div className="font-sans grid md:grid-cols-3 gap-8">
-                <div className="text-center p-8 bg-gradient-to-br from-red-50 to-orange-50 border border-red-100">
-                  <div className="text-3xl font-bold text-red-600 mb-2">
+            <div className="flex-grow xl:pl-10 pt-4">
+              <div className="font-sans grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="text-center p-6 sm:p-8 bg-gradient-to-br from-red-50 to-orange-50 border border-red-100">
+                  <div className="text-2xl sm:text-3xl font-bold text-red-600 mb-2">
                     1 Karma
                   </div>
                   <div className="font-sans text-sm font-medium text-red-700 mb-3">
@@ -156,8 +161,8 @@ export default function Home() {
                   </p>
                 </div>
 
-                <div className="text-center p-8 bg-gradient-to-br from-primary-50 to-primary-100 border border-primary-200">
-                  <div className="text-3xl font-bold text-primary-600 mb-2">
+                <div className="text-center p-6 sm:p-8 bg-gradient-to-br from-primary-50 to-primary-100 border border-primary-200">
+                  <div className="text-2xl sm:text-3xl font-bold text-primary-600 mb-2">
                     10 Karma
                   </div>
                   <div className="font-sans text-sm font-medium text-primary-700 mb-3">
@@ -168,8 +173,8 @@ export default function Home() {
                   </p>
                 </div>
 
-                <div className="text-center p-8 bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200">
-                  <div className="text-3xl font-bold text-green-600 mb-2">
+                <div className="text-center p-6 sm:p-8 bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200">
+                  <div className="text-2xl sm:text-3xl font-bold text-green-600 mb-2">
                     40 Karma
                   </div>
                   <div className="font-sans text-sm font-medium text-green-700 mb-3">
@@ -181,7 +186,7 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="font-sans mt-8 p-6 bg-accent-50 border border-accent-200">
+              <div className="font-sans mt-8 p-4 sm:p-6 bg-accent-50 border border-accent-200">
                 <div className="flex items-center gap-2 mb-2">
                   <CheckIcon size={20} className="text-accent-600" />
                   <span className="font-semibold text-accent-900">
@@ -199,14 +204,14 @@ export default function Home() {
       </div>
 
       {/* CTA Section */}
-      <div className="py-24 bg-primary-500">
+      <div className="py-12 sm:py-24 bg-primary-500">
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h2 className="text-5xl font-bold text-white mb-14">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-8 sm:mb-14">
             Ready to Join the Community?
           </h2>
           {/** TODO: Enable Request Invite button */}
-          <button className="mx-auto bg-[#5C6657] text-white font-serif text-2xl px-8 py-4 mt-4 hover:bg-[#4a523f] transition-colors flex items-center gap-4">
-            Request Invite <MailboxIcon size={32} />
+          <button className="mx-auto bg-[#5C6657] text-white font-serif text-lg sm:text-xl lg:text-2xl px-6 sm:px-8 py-3 sm:py-4 mt-4 hover:bg-[#4a523f] transition-colors flex items-center gap-4">
+            Request Invite <MailboxIcon size={24} className="sm:w-8 sm:h-8" />
           </button>
         </div>
       </div>
