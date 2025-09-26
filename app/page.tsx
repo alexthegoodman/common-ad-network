@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { useAuth } from "@/app/contexts/AuthContext";
 import {
   Trophy,
@@ -19,6 +20,36 @@ import {
 
 export default function Home() {
   const { user } = useAuth();
+  const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [message, setMessage] = useState("");
+
+  const handleInviteRequest = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setMessage("");
+
+    try {
+      const response = await fetch("/api/invite/request", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setMessage("Invite request submitted successfully!");
+        setEmail("");
+      } else {
+        setMessage(data.error || "Something went wrong");
+      }
+    } catch (error) {
+      setMessage("Network error. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   // Redirect authenticated users to dashboard
   if (user) {
@@ -42,12 +73,38 @@ export default function Home() {
               site, you will earn a place on others.
             </p>
             <div className="relative">
-              {/** TODO: Enable Request Invite button */}
-
-              <button className="relative sm:absolute top-4 bg-[#5C6657] text-white font-serif text-lg sm:text-xl lg:text-2xl px-6 sm:px-8 py-3 sm:py-4 mt-4 hover:bg-[#4a523f] transition-colors flex items-center gap-4">
-                Request Invite{" "}
-                <MailboxIcon size={24} className="sm:w-8 sm:h-8" />
-              </button>
+              <form
+                onSubmit={handleInviteRequest}
+                className="flex flex-col sm:flex-row gap-4 items-start sm:items-center mt-4"
+              >
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email"
+                  required
+                  className="px-4 py-5 bg-white text-black w-full sm:w-80"
+                />
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="bg-[#5C6657] text-white font-serif text-lg sm:text-xl lg:text-2xl px-6 sm:px-8 py-3 sm:py-4 hover:bg-[#4a523f] transition-colors flex items-center gap-4 disabled:opacity-50"
+                >
+                  {isSubmitting ? "Requesting..." : "Request Invite"}
+                  <MailboxIcon size={24} className="sm:w-8 sm:h-8" />
+                </button>
+              </form>
+              {message && (
+                <p
+                  className={`mt-2 text-sm ${
+                    message.includes("successfully")
+                      ? "text-gray-600"
+                      : "text-red-600"
+                  }`}
+                >
+                  {message}
+                </p>
+              )}
             </div>
           </div>
           <div className="right w-full lg:w-1/2">
@@ -209,10 +266,38 @@ export default function Home() {
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-8 sm:mb-14">
             Ready to Join the Community?
           </h2>
-          {/** TODO: Enable Request Invite button */}
-          <button className="mx-auto bg-[#5C6657] text-white font-serif text-lg sm:text-xl lg:text-2xl px-6 sm:px-8 py-3 sm:py-4 mt-4 hover:bg-[#4a523f] transition-colors flex items-center gap-4">
-            Request Invite <MailboxIcon size={24} className="sm:w-8 sm:h-8" />
-          </button>
+          <form
+            onSubmit={handleInviteRequest}
+            className="flex flex-col sm:flex-row gap-4 items-center justify-center"
+          >
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
+              required
+              className="px-4 py-5 text-lg bg-white text-black w-full sm:w-80"
+            />
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="bg-[#5C6657] text-white font-serif text-lg sm:text-xl lg:text-2xl px-6 sm:px-8 py-3 sm:py-4 hover:bg-[#4a523f] transition-colors flex items-center gap-4 disabled:opacity-50"
+            >
+              {isSubmitting ? "Requesting..." : "Request Invite"}
+              <MailboxIcon size={24} className="sm:w-8 sm:h-8" />
+            </button>
+          </form>
+          {message && (
+            <p
+              className={`mt-4 text-sm ${
+                message.includes("successfully")
+                  ? "text-gray-200"
+                  : "text-red-200"
+              }`}
+            >
+              {message}
+            </p>
+          )}
         </div>
       </div>
     </div>
