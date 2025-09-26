@@ -217,7 +217,7 @@ export default function Home() {
                   </div>
                 </a>
 
-                <a
+                {/* <a
                   href="https://cal.com"
                   target="_blank"
                   className="ad block w-full bg-[#292929] text-white p-4 sm:p-6 hover:bg-[#1a1a1a] transition-colors"
@@ -236,7 +236,7 @@ export default function Home() {
                       <ArrowRightIcon size={24} className="sm:w-8 sm:h-8" />
                     </div>
                   </div>
-                </a>
+                </a> */}
               </div>
             </div>
           </div>
