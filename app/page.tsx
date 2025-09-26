@@ -13,6 +13,8 @@ import {
   TrophyIcon,
   LockIcon,
   ChartLineUpIcon,
+  CheckIcon,
+  MailboxIcon,
 } from "@phosphor-icons/react";
 
 export default function Home() {
@@ -25,7 +27,7 @@ export default function Home() {
   }
 
   return (
-    <div className="bg-accent-50">
+    <div className="bg-[#EBF1EC]">
       {/* Hero Section */}
       <section className="hero w-full">
         <div className="flex flex-row">
@@ -39,6 +41,13 @@ export default function Home() {
               through mutual advertising. By allowing ads to display on your
               site, you will earn a place on others.
             </p>
+            <div className="relative">
+              {/** TODO: Enable Request Invite button */}
+
+              <button className="absolute top-4 bg-[#5C6657] text-white font-serif text-2xl px-8 py-4 mt-4 hover:bg-[#4a523f] transition-colors flex items-center gap-4">
+                Request Invite <MailboxIcon size={32} />
+              </button>
+            </div>
           </div>
           <div className="right w-1/2">
             <div className="ad w-full">
@@ -79,7 +88,7 @@ export default function Home() {
           <div className="w-[300px] text-center ml-10 p-4 bg-primary-500">
             <h1 className="text-7xl text-[#F1FF89]">How?</h1>
           </div>
-          <div className="flex flex-row bg-linear-to-r from=[#F9F92F] to-[#68FF42] font-sans font-medium">
+          <div className="flex flex-row bg-linear-65 from-[rgba(249,249,47,0.5)] to-[rgba(104,255,66,0.5)] font-sans font-medium">
             <div className="step pt-16 pb-16 text-[#4294FF] w-1/3 flex flex-row justify-center text-center">
               <div className="flex flex-col items-center gap-4 w-full max-w-[270px]">
                 <TrophyIcon size={48} />
@@ -133,9 +142,9 @@ export default function Home() {
                 System
               </p>
             </div>
-            <div className="flex-grow pl-10">
+            <div className="flex-grow pl-10 pt-4">
               <div className="font-sans grid md:grid-cols-3 gap-8">
-                <div className="text-center p-8 bg-gradient-to-br from-red-50 to-orange-50 rounded-2xl border border-red-100">
+                <div className="text-center p-8 bg-gradient-to-br from-red-50 to-orange-50 border border-red-100">
                   <div className="text-3xl font-bold text-red-600 mb-2">
                     1 Karma
                   </div>
@@ -147,7 +156,7 @@ export default function Home() {
                   </p>
                 </div>
 
-                <div className="text-center p-8 bg-gradient-to-br from-primary-50 to-primary-100 rounded-2xl border border-primary-200">
+                <div className="text-center p-8 bg-gradient-to-br from-primary-50 to-primary-100 border border-primary-200">
                   <div className="text-3xl font-bold text-primary-600 mb-2">
                     10 Karma
                   </div>
@@ -159,7 +168,7 @@ export default function Home() {
                   </p>
                 </div>
 
-                <div className="text-center p-8 bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl border border-green-200">
+                <div className="text-center p-8 bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200">
                   <div className="text-3xl font-bold text-green-600 mb-2">
                     40 Karma
                   </div>
@@ -172,9 +181,9 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="font-sans mt-8 p-6 bg-accent-50 rounded-xl border border-accent-200">
+              <div className="font-sans mt-8 p-6 bg-accent-50 border border-accent-200">
                 <div className="flex items-center gap-2 mb-2">
-                  <CheckCircle size={20} className="text-accent-600" />
+                  <CheckIcon size={20} className="text-accent-600" />
                   <span className="font-semibold text-accent-900">
                     Bonus for Smaller Sites
                   </span>
@@ -190,12 +199,15 @@ export default function Home() {
       </div>
 
       {/* CTA Section */}
-      <div className="py-24 bg-gradient-to-r from-primary-600 to-accent-600">
+      <div className="py-24 bg-primary-500">
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-white mb-4">
+          <h2 className="text-5xl font-bold text-white mb-14">
             Ready to Join the Community?
           </h2>
-          {/** TODO: add Request Invite button */}
+          {/** TODO: Enable Request Invite button */}
+          <button className="mx-auto bg-[#5C6657] text-white font-serif text-2xl px-8 py-4 mt-4 hover:bg-[#4a523f] transition-colors flex items-center gap-4">
+            Request Invite <MailboxIcon size={32} />
+          </button>
         </div>
       </div>
     </div>
