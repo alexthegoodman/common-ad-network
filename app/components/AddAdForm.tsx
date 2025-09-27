@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import { Dialog } from "@headlessui/react";
 import { XIcon, Plus, Upload } from "@phosphor-icons/react";
 import { upload } from "@vercel/blob/client";
+import { getCategoryOptions } from "@/app/lib/categories";
 
 interface AddAdFormProps {
   isOpen: boolean;
@@ -21,6 +22,7 @@ export default function AddAdForm({
     description: "",
     imageUrl: "",
     linkUrl: "",
+    category: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -82,7 +84,13 @@ export default function AddAdForm({
         throw new Error(data.error || "Failed to create ad");
       }
 
-      setFormData({ headline: "", description: "", imageUrl: "", linkUrl: "" });
+      setFormData({
+        headline: "",
+        description: "",
+        imageUrl: "",
+        linkUrl: "",
+        category: "",
+      });
       onSuccess?.();
       onClose();
     } catch (err) {
@@ -97,7 +105,7 @@ export default function AddAdForm({
       <div className="fixed inset-0 bg-black/25" />
 
       <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
-        <Dialog.Panel className="mx-auto max-w-md w-full bg-white rounded-2xl p-6 shadow-2xl">
+        <Dialog.Panel className="font-sans mx-auto max-w-md w-full max-h-[80vh] overflow-y-scroll bg-white rounded-2xl p-6 shadow-2xl">
           <div className="flex items-center justify-between mb-6">
             <Dialog.Title className="text-xl font-semibold text-gray-900">
               Add New Ad
@@ -138,6 +146,34 @@ export default function AddAdForm({
               />
               <p className="text-xs text-gray-500 mt-1">
                 {formData.headline.length}/60 characters
+              </p>
+            </div>
+
+            <div>
+              <label
+                htmlFor="category"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Category *
+              </label>
+              <select
+                id="category"
+                required
+                value={formData.category}
+                onChange={(e) =>
+                  setFormData({ ...formData, category: e.target.value })
+                }
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              >
+                <option value="">Select ad category</option>
+                {getCategoryOptions().map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+              <p className="text-xs text-gray-500 mt-1">
+                This determines which sites will display your ad
               </p>
             </div>
 
@@ -196,8 +232,8 @@ export default function AddAdForm({
                 </button>
               </div>
               <p className="text-xs text-gray-500 mt-1">
-                Optional: Upload image (max 5MB) or paste URL • Recommended: 400x300px or
-                4:3 ratio
+                Optional: Upload image (max 5MB) or paste URL • Recommended:
+                400x300px or 4:3 ratio
               </p>
             </div>
 
@@ -222,9 +258,7 @@ export default function AddAdForm({
             </div>
 
             <div>
-              <p className="text-sm font-medium text-gray-700 mb-2">
-                Preview
-              </p>
+              <p className="text-sm font-medium text-gray-700 mb-2">Preview</p>
               <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
                 {formData.imageUrl && (
                   <img

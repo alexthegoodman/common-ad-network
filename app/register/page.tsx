@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { useAuth } from "@/app/contexts/AuthContext";
 import { Eye, EyeSlash, UserPlus, Upload } from "@phosphor-icons/react";
 import { upload } from "@vercel/blob/client";
+import { getCategoryOptions } from "@/app/lib/categories";
 
 function RegisterForm() {
   const searchParams = useSearchParams();
@@ -19,6 +20,7 @@ function RegisterForm() {
     companyDescription: "",
     profilePic: "",
     inviteCode: "",
+    category: "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -101,6 +103,7 @@ function RegisterForm() {
       companyDescription: formData.companyDescription || undefined,
       profilePic: formData.profilePic || undefined,
       inviteCode: formData.inviteCode,
+      category: formData.category || undefined,
     });
 
     if (success) {
@@ -115,7 +118,7 @@ function RegisterForm() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-accent-50 py-12 px-4">
+    <div className="font-sans min-h-screen bg-gradient-to-br from-primary-50 via-white to-accent-50 py-12 px-4">
       <div className="max-w-md mx-auto">
         <div className="bg-white rounded-2xl shadow-xl p-8">
           <div className="text-center mb-8">
@@ -224,6 +227,35 @@ function RegisterForm() {
                 placeholder="https://yourcompany.com"
                 disabled={isLoading}
               />
+            </div>
+
+            <div>
+              <label
+                htmlFor="category"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Company Category *
+              </label>
+              <select
+                id="category"
+                required
+                value={formData.category}
+                onChange={(e) =>
+                  setFormData({ ...formData, category: e.target.value })
+                }
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                disabled={isLoading}
+              >
+                <option value="">Select your company category</option>
+                {getCategoryOptions().map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+              <p className="text-xs text-gray-500 mt-1">
+                This determines which ads will be displayed on your site
+              </p>
             </div>
 
             <div>

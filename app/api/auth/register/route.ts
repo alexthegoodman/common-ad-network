@@ -12,6 +12,7 @@ export async function POST(request: NextRequest) {
       companyDescription,
       profilePic,
       inviteCode,
+      category,
     } = await request.json();
 
     if (!email || !password || !companyName || !companyLink || !inviteCode) {
@@ -53,6 +54,7 @@ export async function POST(request: NextRequest) {
         companyLink,
         companyDescription,
         profilePic,
+        category,
         invitedBy: inviteCodeRecord.createdBy,
         isApproved: true,
         karma: 30,
@@ -75,6 +77,7 @@ export async function POST(request: NextRequest) {
         headline: companyName,
         description: companyDescription || `Check out ${companyName}`,
         linkUrl: companyLink,
+        category,
         isActive: true,
       },
     });

@@ -25,6 +25,7 @@ model User {
   isApproved         Boolean  @default(false)
   inviteCode         String?  @unique
   invitedBy          String?
+  category           String?
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 
@@ -45,6 +46,7 @@ model Ad {
   description String
   imageUrl    String?
   linkUrl     String
+  category    String?
   isActive    Boolean  @default(true)
   isDeleted   Boolean  @default(false)
   impressions Int      @default(0)

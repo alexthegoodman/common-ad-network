@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
     // In production, you'd have a separate sites table
     const siteOwner = await prisma.user.findUnique({
       where: { id: siteId },
-      select: { id: true, karma: true },
+      select: { id: true, karma: true, category: true },
     });
 
     if (!siteOwner) {
@@ -31,16 +31,23 @@ export async function GET(request: NextRequest) {
     // Get client IP for validation
     const clientIP = getClientIP(request);
 
-    // Simple ad selection algorithm - could be much more sophisticated
-    // For now, we'll randomly select from active ads, weighted by user karma
-    const activeAds = await prisma.ad.findMany({
-      where: {
-        isActive: true,
-        isDeleted: false,
-        NOT: {
-          userId: siteId, // Don't show own ads on own site
-        },
+    // Category-based ad selection algorithm
+    // Filter ads by matching category with site owner's category preference
+    const whereClause: any = {
+      isActive: true,
+      isDeleted: false,
+      NOT: {
+        userId: siteId, // Don't show own ads on own site
       },
+    };
+
+    // If site owner has a category preference, only show ads from that category
+    if (siteOwner.category) {
+      whereClause.category = siteOwner.category;
+    }
+
+    const activeAds = await prisma.ad.findMany({
+      where: whereClause,
       include: {
         user: {
           select: {

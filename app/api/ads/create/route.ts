@@ -15,11 +15,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invalid token" }, { status: 401 });
     }
 
-    const { headline, description, imageUrl, linkUrl } = await request.json();
+    const { headline, description, imageUrl, linkUrl, category } = await request.json();
 
-    if (!headline || !description || !linkUrl) {
+    if (!headline || !description || !linkUrl || !category) {
       return NextResponse.json(
-        { error: "Headline, description, and link URL are required" },
+        { error: "Headline, description, category, and link URL are required" },
         { status: 400 }
       );
     }
@@ -31,6 +31,7 @@ export async function POST(request: NextRequest) {
         description,
         imageUrl,
         linkUrl,
+        category,
       },
       include: {
         user: {

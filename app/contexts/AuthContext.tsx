@@ -25,6 +25,7 @@ interface RegisterData {
   companyDescription?: string
   profilePic?: string
   inviteCode: string
+  category?: string
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
