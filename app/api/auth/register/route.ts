@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
       category,
     } = await request.json();
 
-    if (!email || !password || !companyName || !companyLink || !inviteCode) {
+    if (!email || !password || !companyName || !companyLink) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
@@ -33,42 +33,70 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const inviteCodeRecord = await prisma.inviteCode.findUnique({
-      where: { code: inviteCode },
-    });
+    let user = null;
 
-    if (!inviteCodeRecord || inviteCodeRecord.isUsed) {
-      return NextResponse.json(
-        { error: "Invalid or used invite code" },
-        { status: 400 }
-      );
+    if (inviteCode && inviteCode !== "") {
+      const inviteCodeRecord = await prisma.inviteCode.findUnique({
+        where: { code: inviteCode },
+      });
+
+      if (!inviteCodeRecord || inviteCodeRecord.isUsed) {
+        return NextResponse.json(
+          { error: "Invalid or used invite code" },
+          { status: 400 }
+        );
+      }
+
+      const hashedPassword = await hashPassword(password);
+
+      user = await prisma.user.create({
+        data: {
+          email,
+          password: hashedPassword,
+          companyName,
+          companyLink,
+          companyDescription,
+          profilePic,
+          category,
+          invitedBy: inviteCodeRecord.createdBy,
+          isApproved: true,
+          karma: 30,
+        },
+      });
+
+      await prisma.inviteCode.update({
+        where: { code: inviteCode },
+        data: {
+          isUsed: true,
+          usedBy: user.id,
+          usedAt: new Date(),
+        },
+      });
+    } else {
+      const hashedPassword = await hashPassword(password);
+
+      user = await prisma.user.create({
+        data: {
+          email,
+          password: hashedPassword,
+          companyName,
+          companyLink,
+          companyDescription,
+          profilePic,
+          category,
+          invitedBy: "",
+          isApproved: true,
+          karma: 30,
+        },
+      });
     }
 
-    const hashedPassword = await hashPassword(password);
-
-    const user = await prisma.user.create({
-      data: {
-        email,
-        password: hashedPassword,
-        companyName,
-        companyLink,
-        companyDescription,
-        profilePic,
-        category,
-        invitedBy: inviteCodeRecord.createdBy,
-        isApproved: true,
-        karma: 30,
-      },
-    });
-
-    await prisma.inviteCode.update({
-      where: { code: inviteCode },
-      data: {
-        isUsed: true,
-        usedBy: user.id,
-        usedAt: new Date(),
-      },
-    });
+    if (!user) {
+      return NextResponse.json(
+        { error: "User creation failed" },
+        { status: 500 }
+      );
+    }
 
     // Auto-create an ad for the new user
     await prisma.ad.create({

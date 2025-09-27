@@ -141,14 +141,14 @@ function RegisterForm() {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label
+              {/* <label
                 htmlFor="inviteCode"
                 className="block text-sm font-medium text-gray-700 mb-2"
               >
                 Invite Code *
-              </label>
+              </label> */}
               <input
-                type="text"
+                type="hidden"
                 id="inviteCode"
                 required
                 value={formData.inviteCode}
@@ -159,9 +159,9 @@ function RegisterForm() {
                 placeholder="Enter your invite code"
                 disabled={isLoading}
               />
-              <p className="text-xs text-gray-500 mt-1">
+              {/* <p className="text-xs text-gray-500 mt-1">
                 Get an invite code from an existing member
-              </p>
+              </p> */}
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
