@@ -904,18 +904,18 @@ export default function Home() {
                           {ad.description}
                         </p>
 
-                        <div>
+                        <div className="flex flex-row items-center gap-2 mt-1 mb-1 ">
                           {ad.user.profilePic ? (
                             <img
                               src={ad.user.profilePic}
                               alt={ad.user.companyName}
-                              className="w-12 h-12 rounded-full object-cover"
+                              className="w-6 h-6 rounded-full object-cover"
                             />
                           ) : (
                             <></>
                           )}
 
-                          <p className="font-sans text-xs text-slate-500 mt-1 mb-1">
+                          <p className="font-sans text-xs text-slate-500 truncate">
                             Message the founder of {ad.user.companyName} (
                             {ad.user.karma} karma)
                             {/** Add Info Hyperlink for explanation */}
