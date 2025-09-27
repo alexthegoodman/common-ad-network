@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/app/contexts/AuthContext";
 import {
   Trophy,
@@ -28,6 +28,36 @@ export default function Home() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState("");
   const [activeTab, setActiveTab] = useState("survey");
+  const [networkAds, setNetworkAds] = useState([]);
+  const [networkUsers, setNetworkUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchNetworkData = async () => {
+      try {
+        const [adsResponse, usersResponse] = await Promise.all([
+          fetch("/api/ads?random=true&limit=40"),
+          fetch("/api/users?random=true&limit=20"),
+        ]);
+
+        if (adsResponse.ok) {
+          const adsData = await adsResponse.json();
+          setNetworkAds(adsData.ads || []);
+        }
+
+        if (usersResponse.ok) {
+          const usersData = await usersResponse.json();
+          setNetworkUsers(usersData.users || []);
+        }
+      } catch (error) {
+        console.error("Error fetching network data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNetworkData();
+  }, []);
 
   const handleInviteRequest = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -470,7 +500,7 @@ export default function Home() {
       </section>
 
       {/* Special Ad Types Section */}
-      <section className="special-ads pt-8 sm:pt-16 pb-10 sm:pb-20 bg-slate-50">
+      {/* <section className="special-ads pt-8 sm:pt-16 pb-10 sm:pb-20 bg-slate-50">
         <div className="px-4 sm:px-10">
           <div className="mx-auto max-w-7xl">
             <div className="text-center mb-12 sm:mb-16">
@@ -485,7 +515,6 @@ export default function Home() {
               </p>
             </div>
 
-            {/* Tab Navigation */}
             <div className="mb-8">
               <div className="flex flex-wrap justify-center gap-1 bg-white p-2 border border-slate-200 max-w-2xl mx-auto">
                 <button
@@ -521,9 +550,7 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Tab Content */}
             <div className="bg-white border-2 border-slate-200 shadow-lg min-h-[400px]">
-              {/* Survey & Poll Tab */}
               {activeTab === "survey" && (
                 <div className="p-8 sm:p-12">
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
@@ -604,7 +631,6 @@ export default function Home() {
                 </div>
               )}
 
-              {/* Email Collection Tab */}
               {activeTab === "email" && (
                 <div className="p-8 sm:p-12">
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
@@ -661,7 +687,6 @@ export default function Home() {
                 </div>
               )}
 
-              {/* Downloadable Incentives Tab */}
               {activeTab === "download" && (
                 <div className="p-8 sm:p-12">
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
@@ -727,10 +752,10 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Karma System Explanation */}
-      <div className="px-4 sm:px-10 mt-8 sm:mt-16 mb-10 sm:mb-20">
+      <div className="px-4 sm:px-10 mb-10 sm:mb-20">
         <div className="">
           <div className="">
             <h2 className="text-4xl sm:text-6xl md:text-8xl lg:text-[128px] leading-tight lg:leading-[164px] text-primary-500">
@@ -800,6 +825,165 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      {/* Ads in Network Section */}
+      <section className="ads-network py-12 sm:py-20 bg-gradient-to-br from-slate-50 to-gray-100">
+        <div className="px-4 sm:px-10">
+          <div className="mx-auto max-w-7xl">
+            <div className="text-center mb-12 sm:mb-16">
+              <h2 className="text-4xl sm:text-6xl md:text-8xl lg:text-[128px] leading-tight lg:leading-[154px] text-slate-700 mb-6">
+                Live
+                <br />
+                <span className="text-primary-500">Network</span>
+              </h2>
+              <p className="text-lg sm:text-xl lg:text-2xl text-slate-600 font-sans max-w-3xl mx-auto">
+                Real ads from indie makers currently in our network. Join to add
+                your own!
+              </p>
+            </div>
+
+            {loading ? (
+              <div className="text-center py-12">
+                <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
+                <p className="mt-4 text-slate-600 font-sans">
+                  Loading network ads...
+                </p>
+              </div>
+            ) : (
+              <>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+                  {networkAds.slice(0, 8).map((ad: any) => (
+                    <div
+                      key={ad.id}
+                      className="bg-white border-2 border-slate-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 group cursor-pointer"
+                      onClick={() => window.open(ad.linkUrl, "_blank")}
+                    >
+                      {ad.imageUrl ? (
+                        <div className="h-32 overflow-hidden">
+                          <img
+                            src={ad.imageUrl}
+                            alt={ad.headline}
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                          />
+                        </div>
+                      ) : (
+                        <div className="h-32 bg-gradient-to-br from-primary-100 to-accent-100 flex items-center justify-center">
+                          <div className="w-16 h-16 bg-white/80 rounded-lg flex items-center justify-center">
+                            <span className="text-2xl">🚀</span>
+                          </div>
+                        </div>
+                      )}
+                      <div className="p-4">
+                        <h3 className="font-sans font-bold text-slate-800 text-sm mb-2 group-hover:text-primary-600 transition-colors line-clamp-2">
+                          {ad.headline}
+                        </h3>
+                        <p className="font-sans text-xs text-slate-600 mb-3 line-clamp-2">
+                          {ad.description}
+                        </p>
+                        <div className="flex items-center justify-between">
+                          <span className="font-sans text-xs text-slate-500">
+                            by {ad.user.companyName}
+                          </span>
+                          <ArrowRight
+                            size={14}
+                            className="text-slate-400 group-hover:text-primary-500 transition-colors"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {networkAds.length > 8 && (
+                  <div className="text-center mt-8">
+                    <div className="inline-flex items-center gap-2 px-6 py-3 bg-white border-2 border-primary-200 text-primary-700 font-sans font-medium">
+                      <span>
+                        + {networkAds.length - 8} more ads in the network
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* Network Members Section */}
+      <section className="network-members py-12 sm:py-20 bg-white">
+        <div className="px-4 sm:px-10">
+          <div className="mx-auto max-w-6xl">
+            <div className="text-center mb-12 sm:mb-16">
+              <h2 className="text-4xl sm:text-6xl md:text-8xl lg:text-[128px] leading-tight lg:leading-[154px] text-slate-700 mb-6">
+                Network
+                <br />
+                <span className="text-accent-500">Members</span>
+              </h2>
+              <p className="text-lg sm:text-xl lg:text-2xl text-slate-600 font-sans max-w-3xl mx-auto">
+                Indie makers supporting each other through mutual advertising
+              </p>
+            </div>
+
+            {loading ? (
+              <div className="text-center py-12">
+                <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-accent-500"></div>
+                <p className="mt-4 text-slate-600 font-sans">
+                  Loading network members...
+                </p>
+              </div>
+            ) : (
+              <>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+                  {networkUsers
+                    .slice(0, 12)
+                    .map((member: any, index: number) => (
+                      <div
+                        key={member.id}
+                        className="text-center group cursor-pointer"
+                      >
+                        <div className="relative mb-4 mx-auto w-20 h-20 bg-gradient-to-br from-accent-200 to-primary-200 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                          {member.profilePic ? (
+                            <img
+                              src={member.profilePic}
+                              alt={member.companyName}
+                              className="w-16 h-16 rounded-full object-cover"
+                            />
+                          ) : (
+                            <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center">
+                              <span className="text-lg font-bold text-slate-600">
+                                {member.companyName.charAt(0).toUpperCase()}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                        <h3 className="font-sans font-bold text-slate-800 text-sm group-hover:text-accent-600 transition-colors line-clamp-1">
+                          {member.companyName}
+                        </h3>
+                        <p className="font-sans text-xs text-slate-500 mt-1">
+                          {member.karma} karma
+                        </p>
+                      </div>
+                    ))}
+                </div>
+
+                <div className="text-center mt-12">
+                  <div className="inline-flex flex-col sm:flex-row items-center gap-4 px-8 py-6 bg-gradient-to-r from-accent-50 to-primary-50 border-2 border-accent-200">
+                    <Users size={32} className="text-accent-600" />
+                    <div className="text-center sm:text-left">
+                      <div className="font-sans font-bold text-accent-900 text-lg">
+                        Join {networkUsers.length}+ Indie Makers
+                      </div>
+                      <div className="font-sans text-sm text-accent-700">
+                        Supporting each other through the network
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </section>
 
       {/* CTA Section */}
       <div className="py-12 sm:py-24 bg-primary-500">
