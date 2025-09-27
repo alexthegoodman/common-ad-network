@@ -22,6 +22,7 @@ interface RegisterData {
   password: string
   companyName: string
   companyLink: string
+  companyDescription?: string
   profilePic?: string
   inviteCode: string
 }

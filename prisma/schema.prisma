@@ -14,18 +14,19 @@ datasource db {
 }
 
 model User {
-  id          String   @id @default(cuid())
-  email       String   @unique
-  password    String
-  companyName String
-  companyLink String
-  profilePic  String?
-  karma       Int      @default(30)
-  isApproved  Boolean  @default(false)
-  inviteCode  String?  @unique
-  invitedBy   String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id                 String   @id @default(cuid())
+  email              String   @unique
+  password           String
+  companyName        String
+  companyLink        String
+  companyDescription String?
+  profilePic         String?
+  karma              Int      @default(30)
+  isApproved         Boolean  @default(false)
+  inviteCode         String?  @unique
+  invitedBy          String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 
   ads         Ad[]
   clicks      Click[]

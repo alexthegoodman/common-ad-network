@@ -16,6 +16,7 @@ function RegisterForm() {
     confirmPassword: "",
     companyName: "",
     companyLink: "",
+    companyDescription: "",
     profilePic: "",
     inviteCode: "",
   });
@@ -97,6 +98,7 @@ function RegisterForm() {
       password: formData.password,
       companyName: formData.companyName,
       companyLink: formData.companyLink,
+      companyDescription: formData.companyDescription || undefined,
       profilePic: formData.profilePic || undefined,
       inviteCode: formData.inviteCode,
     });
@@ -225,6 +227,34 @@ function RegisterForm() {
             </div>
 
             <div>
+              <label
+                htmlFor="companyDescription"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Company Description
+              </label>
+              <textarea
+                id="companyDescription"
+                rows={3}
+                value={formData.companyDescription}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    companyDescription: e.target.value,
+                  })
+                }
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
+                placeholder="Brief description of your company (optional)"
+                disabled={isLoading}
+                maxLength={160}
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                This will be used as your first ad description (
+                {formData.companyDescription.length}/160 characters)
+              </p>
+            </div>
+
+            <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Profile Picture (optional)
               </label>
@@ -256,7 +286,8 @@ function RegisterForm() {
                 </button>
               </div>
               <p className="text-xs text-gray-500 mt-1">
-                Upload image (max 5MB) or paste URL • Recommended for better profile visibility
+                Upload image (max 5MB) or paste URL • Recommended for better
+                profile visibility
               </p>
             </div>
 

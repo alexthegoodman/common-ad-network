@@ -9,6 +9,7 @@ export async function POST(request: NextRequest) {
       password,
       companyName,
       companyLink,
+      companyDescription,
       profilePic,
       inviteCode,
     } = await request.json();
@@ -50,6 +51,7 @@ export async function POST(request: NextRequest) {
         password: hashedPassword,
         companyName,
         companyLink,
+        companyDescription,
         profilePic,
         invitedBy: inviteCodeRecord.createdBy,
         isApproved: true,
@@ -63,6 +65,17 @@ export async function POST(request: NextRequest) {
         isUsed: true,
         usedBy: user.id,
         usedAt: new Date(),
+      },
+    });
+
+    // Auto-create an ad for the new user
+    await prisma.ad.create({
+      data: {
+        userId: user.id,
+        headline: companyName,
+        description: companyDescription || `Check out ${companyName}`,
+        linkUrl: companyLink,
+        isActive: true,
       },
     });
 
