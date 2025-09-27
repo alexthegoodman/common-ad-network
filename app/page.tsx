@@ -31,6 +31,7 @@ export default function Home() {
   const [networkAds, setNetworkAds] = useState([]);
   const [networkUsers, setNetworkUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [messageDisplay, setMessageDisplay] = useState(false);
 
   useEffect(() => {
     const fetchNetworkData = async () => {
@@ -855,39 +856,113 @@ export default function Home() {
                   {networkAds.slice(0, 8).map((ad: any) => (
                     <div
                       key={ad.id}
-                      className="bg-white border-2 border-slate-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 group cursor-pointer"
-                      onClick={() => window.open(ad.linkUrl, "_blank")}
+                      className="bg-white border-2 border-slate-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 group "
                     >
                       {ad.imageUrl ? (
-                        <div className="h-32 overflow-hidden">
+                        <div
+                          className="relative h-32 overflow-hidden cursor-pointer"
+                          onClick={() => window.open(ad.linkUrl, "_blank")}
+                        >
                           <img
                             src={ad.imageUrl}
                             alt={ad.headline}
                             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                           />
+
+                          <div className="absolute opacity-0 hover:opacity-80 top-0 left-0 right-0 bottom-0 bg-gray-500">
+                            <span className="text-white text-xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                              Visit {ad.user.companyName}
+                            </span>
+                          </div>
                         </div>
                       ) : (
-                        <div className="h-32 bg-gradient-to-br from-primary-100 to-accent-100 flex items-center justify-center">
+                        <div
+                          className="relative h-32 bg-gradient-to-br from-primary-100 to-accent-100 flex items-center justify-center cursor-pointer"
+                          onClick={() => window.open(ad.linkUrl, "_blank")}
+                        >
                           <div className="w-16 h-16 bg-white/80 rounded-lg flex items-center justify-center">
                             <span className="text-2xl">🚀</span>
+                          </div>
+
+                          <div className="absolute opacity-0 hover:opacity-80 top-0 left-0 right-0 bottom-0 bg-gray-500">
+                            <span className="text-white text-xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                              Visit {ad.user.companyName}
+                            </span>
                           </div>
                         </div>
                       )}
                       <div className="p-4">
-                        <h3 className="font-sans font-bold text-slate-800 text-sm mb-2 group-hover:text-primary-600 transition-colors line-clamp-2">
-                          {ad.headline}
-                        </h3>
+                        <div className="flex items-center justify-between">
+                          <h3 className="font-sans font-bold text-slate-800 text-sm mb-2 group-hover:text-primary-600 transition-colors line-clamp-2">
+                            {ad.headline}
+                          </h3>
+                          <span className="font-sans text-xs text-slate-500">
+                            {ad.user.companyName}
+                          </span>
+                        </div>
                         <p className="font-sans text-xs text-slate-600 mb-3 line-clamp-2">
                           {ad.description}
                         </p>
+
+                        <div>
+                          {ad.user.profilePic ? (
+                            <img
+                              src={ad.user.profilePic}
+                              alt={ad.user.companyName}
+                              className="w-12 h-12 rounded-full object-cover"
+                            />
+                          ) : (
+                            <></>
+                          )}
+
+                          <p className="font-sans text-xs text-slate-500 mt-1 mb-1">
+                            Message the founder of {ad.user.companyName} (
+                            {ad.user.karma} karma)
+                            {/** Add Info Hyperlink for explanation */}
+                          </p>
+                        </div>
                         <div className="flex items-center justify-between">
-                          <span className="font-sans text-xs text-slate-500">
-                            by {ad.user.companyName}
-                          </span>
-                          <ArrowRight
-                            size={14}
-                            className="text-slate-400 group-hover:text-primary-500 transition-colors"
-                          />
+                          {messageDisplay ? (
+                            <div className="flex flex-col mt-2 w-full">
+                              <input
+                                type="email"
+                                placeholder="Your email"
+                                className="mb-2 px-3 py-2 border border-slate-300 focus:border-primary-500 focus:outline-none text-sm font-sans"
+                              />
+                              <textarea
+                                placeholder="Your message"
+                                className="mb-2 px-3 py-2 border border-slate-300 focus:border-primary-500 focus:outline-none text-sm font-sans"
+                                rows={2}
+                              ></textarea>
+                              <button
+                                className="self-end bg-primary-500 text-white px-4 py-2 text-sm font-sans hover:bg-primary-600 transition-colors"
+                                // onClick, will send the message to the ad owner email
+                              >
+                                Send
+                              </button>
+                            </div>
+                          ) : (
+                            <>
+                              <textarea
+                                className="px-3 py-1 bg-slate-100 text-slate-700 text-xs font-sans w-full resize-none border border-slate-200
+                            focus:outline-none focus:border-primary-300
+                          "
+                                rows={1}
+                                readOnly
+                                // onClick, will open an email input and message textarea 2 rows
+                                onClick={() =>
+                                  setMessageDisplay(!messageDisplay)
+                                }
+                                defaultValue={
+                                  "I saw your ad and would like to connect..."
+                                }
+                              ></textarea>
+                              <ArrowRight
+                                size={14}
+                                className="text-slate-400 group-hover:text-primary-500 transition-colors"
+                              />
+                            </>
+                          )}
                         </div>
                       </div>
                     </div>

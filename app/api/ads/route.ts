@@ -11,7 +11,9 @@ export async function GET(request: NextRequest) {
 
     const skip = (page - 1) * limit;
 
-    const where = userId ? { userId, isDeleted: false } : { isActive: true, isDeleted: false };
+    const where = userId
+      ? { userId, isDeleted: false }
+      : { isActive: true, isDeleted: false };
 
     let ads;
     let total;
@@ -25,6 +27,7 @@ export async function GET(request: NextRequest) {
             select: {
               companyName: true,
               profilePic: true,
+              karma: true,
             },
           },
         },
