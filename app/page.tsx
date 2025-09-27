@@ -16,6 +16,10 @@ import {
   ChartLineUpIcon,
   CheckIcon,
   MailboxIcon,
+  Target,
+  Code,
+  PaintBrush,
+  ChartBar,
 } from "@phosphor-icons/react";
 
 export default function Home() {
@@ -286,6 +290,184 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Smart Targeting Section */}
+      <section className="targeting pb-10 sm:pb-20">
+        <div className="px-4 sm:px-10">
+          <div className="mx-auto">
+            <div className="text-center mb-12 sm:mb-16">
+              <h2 className="text-4xl sm:text-6xl md:text-8xl lg:text-[128px] leading-tight lg:leading-[154px] text-slate-700 mb-6">
+                Smart
+                <br />
+                <span className="text-primary-500">Targeting</span>
+              </h2>
+              <p className="text-lg sm:text-xl lg:text-2xl text-slate-600 font-sans max-w-3xl mx-auto">
+                Your ads only appear on relevant sites. Our category-based
+                matching ensures a developer tool reaches developers, not
+                designers.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+              {/* Visual Demonstration */}
+              <div className="space-y-6">
+                <div className="bg-white p-6 border-2 border-slate-200 ">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 bg-blue-500  flex items-center justify-center">
+                      <Code size={24} className="text-white" />
+                    </div>
+                    <span className="font-sans font-semibold text-slate-800">
+                      Developer Tools Site
+                    </span>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-3  border border-blue-200">
+                      <div className="flex items-center justify-between">
+                        <span className="font-sans text-sm font-medium text-blue-800">
+                          API Monitoring Tool
+                        </span>
+                        <Target size={16} className="text-blue-600" />
+                      </div>
+                    </div>
+                    <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-3  border border-green-200">
+                      <div className="flex items-center justify-between">
+                        <span className="font-sans text-sm font-medium text-green-800">
+                          Code Editor Extension
+                        </span>
+                        <Target size={16} className="text-green-600" />
+                      </div>
+                    </div>
+                    <div className="bg-gradient-to-r from-purple-50 to-violet-50 p-3  border border-purple-200">
+                      <div className="flex items-center justify-between">
+                        <span className="font-sans text-sm font-medium text-purple-800">
+                          Testing Framework
+                        </span>
+                        <Target size={16} className="text-purple-600" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-white p-6 border-2 border-slate-200 ">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 bg-pink-500  flex items-center justify-center">
+                      <PaintBrush size={24} className="text-white" />
+                    </div>
+                    <span className="font-sans font-semibold text-slate-800">
+                      Design Tools Site
+                    </span>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="bg-gradient-to-r from-pink-50 to-rose-50 p-3  border border-pink-200">
+                      <div className="flex items-center justify-between">
+                        <span className="font-sans text-sm font-medium text-pink-800">
+                          Icon Library
+                        </span>
+                        <Target size={16} className="text-pink-600" />
+                      </div>
+                    </div>
+                    <div className="bg-gradient-to-r from-orange-50 to-amber-50 p-3  border border-orange-200">
+                      <div className="flex items-center justify-between">
+                        <span className="font-sans text-sm font-medium text-orange-800">
+                          Color Palette Generator
+                        </span>
+                        <Target size={16} className="text-orange-600" />
+                      </div>
+                    </div>
+                    <div className="bg-gradient-to-r from-teal-50 to-cyan-50 p-3  border border-teal-200">
+                      <div className="flex items-center justify-between">
+                        <span className="font-sans text-sm font-medium text-teal-800">
+                          UI Component Kit
+                        </span>
+                        <Target size={16} className="text-teal-600" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Benefits List */}
+              <div className="space-y-6">
+                <div className="bg-white p-6 sm:p-8  border-2 border-primary-200 shadow-lg">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="w-12 h-12 bg-primary-500  flex items-center justify-center">
+                      <ChartBar size={28} className="text-white" />
+                    </div>
+                    <h3 className="text-xl sm:text-2xl font-bold text-slate-800 font-sans">
+                      Higher CTR
+                    </h3>
+                  </div>
+                  <p className="text-slate-600 font-sans text-base sm:text-lg leading-relaxed">
+                    When your ads appear on relevant sites, they perform 3-5x
+                    better than random placement.
+                  </p>
+                </div>
+
+                <div className="bg-white p-6 sm:p-8  border-2 border-accent-200 shadow-lg">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="w-12 h-12 bg-accent-500  flex items-center justify-center">
+                      <Target size={28} className="text-white" />
+                    </div>
+                    <h3 className="text-xl sm:text-2xl font-bold text-slate-800 font-sans">
+                      Better Audience
+                    </h3>
+                  </div>
+                  <p className="text-slate-600 font-sans text-base sm:text-lg leading-relaxed">
+                    Reach users who are already interested in your category of
+                    product.
+                  </p>
+                </div>
+
+                <div className="bg-white p-6 sm:p-8  border-2 border-green-200 shadow-lg">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="w-12 h-12 bg-green-500  flex items-center justify-center">
+                      <CheckCircle size={28} className="text-white" />
+                    </div>
+                    <h3 className="text-xl sm:text-2xl font-bold text-slate-800 font-sans">
+                      Easy Setup
+                    </h3>
+                  </div>
+                  <p className="text-slate-600 font-sans text-base sm:text-lg leading-relaxed">
+                    Just choose your category during signup and ad creation. We
+                    handle the rest automatically.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Category Examples */}
+            <div className="mt-12 sm:mt-16">
+              <h3 className="text-2xl sm:text-3xl font-bold text-center text-slate-800 mb-8 font-sans">
+                20+ Categories Available
+              </h3>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+                {[
+                  "Developer Tools",
+                  "SaaS & Web Apps",
+                  "Design & Creative",
+                  "Mobile Apps",
+                  "AI & ML Tools",
+                  "Marketing Tools",
+                  "Analytics & Data",
+                  "E-commerce",
+                ].map((category) => (
+                  <div
+                    key={category}
+                    className="bg-white p-3 sm:p-4  border border-slate-200 text-center"
+                  >
+                    <span className="font-sans text-sm sm:text-base font-medium text-slate-700">
+                      {category}
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <p className="text-center text-slate-500 font-sans text-sm mt-4">
+                + 12 more categories
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Karma System Explanation */}
       <div className="px-4 sm:px-10 mb-10 sm:mb-20">
         <div className="">
@@ -296,7 +478,7 @@ export default function Home() {
           </div>
           <div className="flex flex-col xl:flex-row">
             <div>
-              <p className="text-4xl sm:text-6xl md:text-8xl lg:text-[128px] leading-tight lg:leading-[164px]">
+              <p className="text-slate-700 text-4xl sm:text-6xl md:text-8xl lg:text-[128px] leading-tight lg:leading-[164px]">
                 Karma
                 <br />
                 System
