@@ -27,6 +27,7 @@ export default function Home() {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState("");
+  const [activeTab, setActiveTab] = useState("survey");
 
   const handleInviteRequest = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -468,8 +469,268 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Special Ad Types Section */}
+      <section className="special-ads pt-8 sm:pt-16 pb-10 sm:pb-20 bg-slate-50">
+        <div className="px-4 sm:px-10">
+          <div className="mx-auto max-w-7xl">
+            <div className="text-center mb-12 sm:mb-16">
+              <h2 className="text-4xl sm:text-6xl md:text-8xl lg:text-[128px] leading-tight lg:leading-[154px] text-slate-700 mb-6">
+                Special
+                <br />
+                <span className="text-primary-500">Ad Types</span>
+              </h2>
+              <p className="text-lg sm:text-xl lg:text-2xl text-slate-600 font-sans max-w-3xl mx-auto">
+                In addition to image ads and text ads, engage your audience with
+                interactive experiences that drive real results.
+              </p>
+            </div>
+
+            {/* Tab Navigation */}
+            <div className="mb-8">
+              <div className="flex flex-wrap justify-center gap-1 bg-white p-2 border border-slate-200 max-w-2xl mx-auto">
+                <button
+                  onClick={() => setActiveTab("survey")}
+                  className={`px-6 py-3 font-sans font-medium transition-all ${
+                    activeTab === "survey"
+                      ? "bg-primary-500 text-white"
+                      : "text-slate-600 hover:bg-slate-100"
+                  }`}
+                >
+                  Surveys & Polls
+                </button>
+                <button
+                  onClick={() => setActiveTab("email")}
+                  className={`px-6 py-3 font-sans font-medium transition-all ${
+                    activeTab === "email"
+                      ? "bg-primary-500 text-white"
+                      : "text-slate-600 hover:bg-slate-100"
+                  }`}
+                >
+                  Email Collection
+                </button>
+                <button
+                  onClick={() => setActiveTab("download")}
+                  className={`px-6 py-3 font-sans font-medium transition-all ${
+                    activeTab === "download"
+                      ? "bg-primary-500 text-white"
+                      : "text-slate-600 hover:bg-slate-100"
+                  }`}
+                >
+                  Downloadable Incentives
+                </button>
+              </div>
+            </div>
+
+            {/* Tab Content */}
+            <div className="bg-white border-2 border-slate-200 shadow-lg min-h-[400px]">
+              {/* Survey & Poll Tab */}
+              {activeTab === "survey" && (
+                <div className="p-8 sm:p-12">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+                    <div>
+                      <h3 className="text-2xl sm:text-3xl font-bold text-slate-800 mb-4 font-sans">
+                        Engage with Surveys & Polls
+                      </h3>
+                      <p className="text-slate-600 font-sans text-lg leading-relaxed mb-6">
+                        Collect valuable insights from your audience while
+                        providing an interactive experience that drives
+                        engagement.
+                      </p>
+                      <ul className="space-y-3 text-slate-600 font-sans">
+                        <li className="flex items-center gap-3">
+                          <CheckCircle size={20} className="text-green-500" />
+                          Real-time poll results
+                        </li>
+                        <li className="flex items-center gap-3">
+                          <CheckCircle size={20} className="text-green-500" />
+                          Multiple choice questions
+                        </li>
+                        <li className="flex items-center gap-3">
+                          <CheckCircle size={20} className="text-green-500" />
+                          Audience insights dashboard
+                        </li>
+                      </ul>
+                    </div>
+                    <div className="bg-gradient-to-br from-blue-50 to-indigo-100 p-6 border border-blue-200">
+                      <div className="bg-white p-4 border border-blue-300 mb-4">
+                        <h4 className="font-sans font-bold text-slate-800 mb-3">
+                          What's your biggest challenge as an indie maker?
+                        </h4>
+                        <div className="space-y-2">
+                          {[
+                            {
+                              option: "Finding customers",
+                              votes: 45,
+                              color: "bg-blue-500",
+                            },
+                            {
+                              option: "Building the product",
+                              votes: 23,
+                              color: "bg-green-500",
+                            },
+                            {
+                              option: "Marketing & promotion",
+                              votes: 32,
+                              color: "bg-purple-500",
+                            },
+                          ].map((item, index) => (
+                            <div
+                              key={index}
+                              className="cursor-pointer hover:bg-slate-50 p-2 border border-slate-200 transition-colors"
+                            >
+                              <div className="flex justify-between items-center mb-1">
+                                <span className="font-sans text-sm text-slate-700">
+                                  {item.option}
+                                </span>
+                                <span className="font-sans text-xs text-slate-500">
+                                  {item.votes}%
+                                </span>
+                              </div>
+                              <div className="w-full bg-slate-200 h-2">
+                                <div
+                                  className={`${item.color} h-2`}
+                                  style={{ width: `${item.votes}%` }}
+                                ></div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        <button className="w-full mt-3 bg-blue-500 text-white py-2 font-sans text-sm hover:bg-blue-600 transition-colors">
+                          Vote & See Results
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Email Collection Tab */}
+              {activeTab === "email" && (
+                <div className="p-8 sm:p-12">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+                    <div>
+                      <h3 className="text-2xl sm:text-3xl font-bold text-slate-800 mb-4 font-sans">
+                        Build Your Email List
+                      </h3>
+                      <p className="text-slate-600 font-sans text-lg leading-relaxed mb-6">
+                        Convert visitors into subscribers with compelling email
+                        capture forms that offer real value.
+                      </p>
+                      <ul className="space-y-3 text-slate-600 font-sans">
+                        <li className="flex items-center gap-3">
+                          <CheckCircle size={20} className="text-green-500" />
+                          Custom form designs
+                        </li>
+                        <li className="flex items-center gap-3">
+                          <CheckCircle size={20} className="text-green-500" />
+                          Double opt-in compliance
+                        </li>
+                        <li className="flex items-center gap-3">
+                          <CheckCircle size={20} className="text-green-500" />
+                          Integration with email tools
+                        </li>
+                      </ul>
+                    </div>
+                    <div className="bg-gradient-to-br from-green-50 to-emerald-100 p-6 border border-green-200">
+                      <div className="bg-white p-6 border border-green-300">
+                        <div className="text-center mb-4">
+                          <h4 className="font-sans font-bold text-slate-800 text-xl mb-2">
+                            Get Weekly Indie Maker Tips
+                          </h4>
+                          <p className="font-sans text-sm text-slate-600">
+                            Join 2,500+ makers getting actionable insights every
+                            Tuesday
+                          </p>
+                        </div>
+                        <form className="space-y-3">
+                          <input
+                            type="email"
+                            placeholder="Enter your email address"
+                            className="w-full px-4 py-3 border border-slate-300 font-sans text-sm focus:border-green-500 focus:outline-none"
+                          />
+                          <button className="w-full bg-green-500 text-white py-3 font-sans font-medium hover:bg-green-600 transition-colors">
+                            Subscribe Now
+                          </button>
+                        </form>
+                        <p className="font-sans text-xs text-slate-500 text-center mt-3">
+                          No spam. Unsubscribe anytime.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Downloadable Incentives Tab */}
+              {activeTab === "download" && (
+                <div className="p-8 sm:p-12">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+                    <div>
+                      <h3 className="text-2xl sm:text-3xl font-bold text-slate-800 mb-4 font-sans">
+                        Offer Valuable Downloads
+                      </h3>
+                      <p className="text-slate-600 font-sans text-lg leading-relaxed mb-6">
+                        Provide immediate value with downloadable resources that
+                        capture leads and showcase your expertise.
+                      </p>
+                      <ul className="space-y-3 text-slate-600 font-sans">
+                        <li className="flex items-center gap-3">
+                          <CheckCircle size={20} className="text-green-500" />
+                          PDF guides & checklists
+                        </li>
+                        <li className="flex items-center gap-3">
+                          <CheckCircle size={20} className="text-green-500" />
+                          Code templates & tools
+                        </li>
+                        <li className="flex items-center gap-3">
+                          <CheckCircle size={20} className="text-green-500" />
+                          Exclusive content access
+                        </li>
+                      </ul>
+                    </div>
+                    <div className="bg-gradient-to-br from-purple-50 to-violet-100 p-6 border border-purple-200">
+                      <div className="bg-white p-6 border border-purple-300">
+                        <div className="text-center mb-4">
+                          <div className="w-16 h-16 bg-purple-500 mx-auto mb-3 flex items-center justify-center">
+                            <span className="text-white font-bold text-xl">
+                              PDF
+                            </span>
+                          </div>
+                          <h4 className="font-sans font-bold text-slate-800 text-xl mb-2">
+                            The Complete SaaS Launch Checklist
+                          </h4>
+                          <p className="font-sans text-sm text-slate-600 mb-4">
+                            47-point checklist used by successful indie makers
+                            to launch their products
+                          </p>
+                        </div>
+                        <form className="space-y-3">
+                          <input
+                            type="email"
+                            placeholder="Enter your email for instant download"
+                            className="w-full px-4 py-3 border border-slate-300 font-sans text-sm focus:border-purple-500 focus:outline-none"
+                          />
+                          <button className="w-full bg-purple-500 text-white py-3 font-sans font-medium hover:bg-purple-600 transition-colors">
+                            Download Free Checklist
+                          </button>
+                        </form>
+                        <div className="flex items-center justify-center gap-2 mt-3 text-slate-500 text-xs">
+                          <span>✓ Instant download</span>
+                          <span>•</span>
+                          <span>✓ No spam</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Karma System Explanation */}
-      <div className="px-4 sm:px-10 mb-10 sm:mb-20">
+      <div className="px-4 sm:px-10 mt-8 sm:mt-16 mb-10 sm:mb-20">
         <div className="">
           <div className="">
             <h2 className="text-4xl sm:text-6xl md:text-8xl lg:text-[128px] leading-tight lg:leading-[164px] text-primary-500">
