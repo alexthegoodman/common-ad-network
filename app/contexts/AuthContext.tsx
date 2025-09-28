@@ -24,6 +24,7 @@ interface RegisterData {
   companyLink: string
   companyDescription?: string
   profilePic?: string
+  firstAdImage?: string
   inviteCode: string
   category?: string
 }

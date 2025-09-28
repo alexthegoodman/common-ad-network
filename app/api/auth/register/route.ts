@@ -11,6 +11,7 @@ export async function POST(request: NextRequest) {
       companyLink,
       companyDescription,
       profilePic,
+      firstAdImage,
       inviteCode,
       category,
     } = await request.json();
@@ -84,7 +85,7 @@ export async function POST(request: NextRequest) {
           companyDescription,
           profilePic,
           category,
-          invitedBy: "",
+          // invitedBy: email, // Self-invited
           isApproved: true,
           karma: 30,
         },
@@ -105,6 +106,7 @@ export async function POST(request: NextRequest) {
         headline: companyName,
         description: companyDescription || `Check out ${companyName}`,
         linkUrl: companyLink,
+        imageUrl: firstAdImage || undefined,
         category,
         isActive: true,
       },

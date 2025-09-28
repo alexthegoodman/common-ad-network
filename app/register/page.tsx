@@ -7,6 +7,7 @@ import { useAuth } from "@/app/contexts/AuthContext";
 import { Eye, EyeSlash, UserPlus, Upload } from "@phosphor-icons/react";
 import { upload } from "@vercel/blob/client";
 import { getCategoryOptions } from "@/app/lib/categories";
+import { useDebounce } from "@uidotdev/usehooks";
 
 function RegisterForm() {
   const searchParams = useSearchParams();
@@ -19,6 +20,7 @@ function RegisterForm() {
     companyLink: "",
     companyDescription: "",
     profilePic: "",
+    firstAdImage: "",
     inviteCode: "",
     category: "",
   });
@@ -26,8 +28,14 @@ function RegisterForm() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [isUploadingAdImage, setIsUploadingAdImage] = useState(false);
+  const [isLoadingMetadata, setIsLoadingMetadata] = useState(false);
   const [error, setError] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const adImageInputRef = useRef<HTMLInputElement>(null);
+
+  // Debounce the company URL for auto-fill functionality
+  const debouncedCompanyUrl = useDebounce(formData.companyLink, 1000);
 
   // Pre-fill invite code from URL
   useEffect(() => {
@@ -36,6 +44,13 @@ function RegisterForm() {
       setFormData((prev) => ({ ...prev, inviteCode: inviteFromUrl }));
     }
   }, [searchParams]);
+
+  // Auto-fill metadata when URL changes (debounced)
+  useEffect(() => {
+    if (debouncedCompanyUrl && debouncedCompanyUrl.startsWith("http")) {
+      fetchUrlMetadata(debouncedCompanyUrl);
+    }
+  }, [debouncedCompanyUrl]);
 
   const handleImageUpload = async (file: File) => {
     if (!file.type.startsWith("image/")) {
@@ -66,10 +81,73 @@ function RegisterForm() {
     }
   };
 
+  const handleAdImageUpload = async (file: File) => {
+    if (!file.type.startsWith("image/")) {
+      setError("Please select a valid image file");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      setError("Image must be less than 5MB");
+      return;
+    }
+
+    setIsUploadingAdImage(true);
+    setError("");
+
+    try {
+      const blob = await upload(file.name, file, {
+        access: "public",
+        handleUploadUrl: "/api/blob/upload",
+      });
+
+      setFormData({ ...formData, firstAdImage: blob.url });
+    } catch (err) {
+      setError("Failed to upload image. Please try again.");
+      console.error("Upload error:", err);
+    } finally {
+      setIsUploadingAdImage(false);
+    }
+  };
+
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       handleImageUpload(file);
+    }
+  };
+
+  const handleAdImageFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      handleAdImageUpload(file);
+    }
+  };
+
+  const fetchUrlMetadata = async (url: string) => {
+    if (!url || !url.startsWith("http")) return;
+
+    setIsLoadingMetadata(true);
+    try {
+      const response = await fetch("/api/metadata", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url }),
+      });
+
+      if (response.ok) {
+        const metadata = await response.json();
+        setFormData((prev) => ({
+          ...prev,
+          companyName: metadata.title || prev.companyName,
+          companyDescription: metadata.description || prev.companyDescription,
+          firstAdImage: metadata.image || prev.firstAdImage,
+        }));
+      }
+    } catch (error) {
+      console.error("Failed to fetch metadata:", error);
+    } finally {
+      setIsLoadingMetadata(false);
     }
   };
 
@@ -88,10 +166,10 @@ function RegisterForm() {
       return;
     }
 
-    if (!formData.inviteCode) {
-      setError("Invite code is required");
-      return;
-    }
+    // if (!formData.inviteCode) {
+    //   setError("Invite code is required");
+    //   return;
+    // }
 
     setIsLoading(true);
 
@@ -102,6 +180,7 @@ function RegisterForm() {
       companyLink: formData.companyLink,
       companyDescription: formData.companyDescription || undefined,
       profilePic: formData.profilePic || undefined,
+      firstAdImage: formData.firstAdImage || undefined,
       inviteCode: formData.inviteCode,
       category: formData.category || undefined,
     });
@@ -119,7 +198,7 @@ function RegisterForm() {
 
   return (
     <div className="font-sans min-h-screen bg-gradient-to-br from-primary-50 via-white to-accent-50 py-12 px-4">
-      <div className="max-w-md mx-auto">
+      <div className="max-w-lg mx-auto">
         <div className="bg-white rounded-2xl shadow-xl p-8">
           <div className="text-center mb-8">
             <div className="w-16 h-16 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
@@ -139,14 +218,8 @@ function RegisterForm() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-8">
             <div>
-              {/* <label
-                htmlFor="inviteCode"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
-                Invite Code *
-              </label> */}
               <input
                 type="hidden"
                 id="inviteCode"
@@ -155,16 +228,21 @@ function RegisterForm() {
                 onChange={(e) =>
                   setFormData({ ...formData, inviteCode: e.target.value })
                 }
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                placeholder="Enter your invite code"
                 disabled={isLoading}
               />
-              {/* <p className="text-xs text-gray-500 mt-1">
-                Get an invite code from an existing member
-              </p> */}
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Account Information Section */}
+            <div className="space-y-6">
+              <div className="border-b border-gray-200 pb-2">
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Account Information
+                </h3>
+                <p className="text-sm text-gray-600">
+                  Your login credentials and profile
+                </p>
+              </div>
+
               <div>
                 <label
                   htmlFor="email"
@@ -186,212 +264,277 @@ function RegisterForm() {
                 />
               </div>
 
-              <div>
-                <label
-                  htmlFor="companyName"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  Company Name *
-                </label>
-                <input
-                  type="text"
-                  id="companyName"
-                  required
-                  value={formData.companyName}
-                  onChange={(e) =>
-                    setFormData({ ...formData, companyName: e.target.value })
-                  }
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  placeholder="Your Company"
-                  disabled={isLoading}
-                />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label
+                    htmlFor="password"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
+                    Password *
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      id="password"
+                      required
+                      minLength={8}
+                      value={formData.password}
+                      onChange={(e) =>
+                        setFormData({ ...formData, password: e.target.value })
+                      }
+                      className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      placeholder="Min. 8 characters"
+                      disabled={isLoading}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                      disabled={isLoading}
+                    >
+                      {showPassword ? (
+                        <EyeSlash size={20} />
+                      ) : (
+                        <Eye size={20} />
+                      )}
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="confirmPassword"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
+                    Confirm Password *
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showConfirmPassword ? "text" : "password"}
+                      id="confirmPassword"
+                      required
+                      value={formData.confirmPassword}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          confirmPassword: e.target.value,
+                        })
+                      }
+                      className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      placeholder="Repeat password"
+                      disabled={isLoading}
+                    />
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                      disabled={isLoading}
+                    >
+                      {showConfirmPassword ? (
+                        <EyeSlash size={20} />
+                      ) : (
+                        <Eye size={20} />
+                      )}
+                    </button>
+                  </div>
+                </div>
               </div>
-            </div>
 
-            <div>
-              <label
-                htmlFor="companyLink"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
-                Company Website *
-              </label>
-              <input
-                type="url"
-                id="companyLink"
-                required
-                value={formData.companyLink}
-                onChange={(e) =>
-                  setFormData({ ...formData, companyLink: e.target.value })
-                }
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                placeholder="https://yourcompany.com"
-                disabled={isLoading}
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="category"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
-                Company Category *
-              </label>
-              <select
-                id="category"
-                required
-                value={formData.category}
-                onChange={(e) =>
-                  setFormData({ ...formData, category: e.target.value })
-                }
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                disabled={isLoading}
-              >
-                <option value="">Select your company category</option>
-                {getCategoryOptions().map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-              <p className="text-xs text-gray-500 mt-1">
-                This determines which ads will be displayed on your site
-              </p>
-            </div>
-
-            <div>
-              <label
-                htmlFor="companyDescription"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
-                Company Description
-              </label>
-              <textarea
-                id="companyDescription"
-                rows={3}
-                value={formData.companyDescription}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    companyDescription: e.target.value,
-                  })
-                }
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
-                placeholder="Brief description of your company (optional)"
-                disabled={isLoading}
-                maxLength={160}
-              />
-              <p className="text-xs text-gray-500 mt-1">
-                This will be used as your first ad description (
-                {formData.companyDescription.length}/160 characters)
-              </p>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Profile Picture (optional)
-              </label>
-              <div className="flex rounded-lg border border-gray-300 overflow-hidden">
-                <input
-                  type="url"
-                  value={formData.profilePic}
-                  onChange={(e) =>
-                    setFormData({ ...formData, profilePic: e.target.value })
-                  }
-                  className="flex-1 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
-                  placeholder="Or paste image URL directly"
-                  disabled={isLoading}
-                />
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileSelect}
-                  className="hidden"
-                />
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={isUploading || isLoading}
-                  className="px-4 bg-gray-50 border-l border-gray-300 text-gray-600 hover:bg-gray-100 disabled:opacity-50 transition-colors"
-                >
-                  {isUploading ? "Uploading..." : <Upload size={16} />}
-                </button>
-              </div>
-              <p className="text-xs text-gray-500 mt-1">
-                Upload image (max 5MB) or paste URL • Recommended for better
-                profile visibility
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  Password *
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Profile Picture (optional)
                 </label>
-                <div className="relative">
+                <div className="flex rounded-lg border border-gray-300 overflow-hidden">
                   <input
-                    type={showPassword ? "text" : "password"}
-                    id="password"
-                    required
-                    minLength={8}
-                    value={formData.password}
+                    type="url"
+                    value={formData.profilePic}
                     onChange={(e) =>
-                      setFormData({ ...formData, password: e.target.value })
+                      setFormData({ ...formData, profilePic: e.target.value })
                     }
-                    className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                    placeholder="Min. 8 characters"
+                    className="flex-1 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    placeholder="Or paste image URL directly"
                     disabled={isLoading}
+                  />
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileSelect}
+                    className="hidden"
                   />
                   <button
                     type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={isUploading || isLoading}
+                    className="px-4 bg-gray-50 border-l border-gray-300 text-gray-600 hover:bg-gray-100 disabled:opacity-50 transition-colors"
+                  >
+                    {isUploading ? "Uploading..." : <Upload size={16} />}
+                  </button>
+                </div>
+                <p className="text-xs text-gray-500 mt-1">
+                  Upload image (max 5MB) or paste URL • Recommended for better
+                  profile visibility
+                </p>
+              </div>
+            </div>
+
+            {/* Company & First Ad Section */}
+            <div className="space-y-6">
+              <div className="border-b border-gray-200 pb-2">
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Company & First Ad
+                </h3>
+                <p className="text-sm text-gray-600">
+                  Information for your company and first advertisement
+                </p>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="companyLink"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  Company Website *
+                </label>
+                <div className="relative">
+                  <input
+                    type="url"
+                    id="companyLink"
+                    required
+                    value={formData.companyLink}
+                    onChange={(e) =>
+                      setFormData({ ...formData, companyLink: e.target.value })
+                    }
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    placeholder="https://yourcompany.com"
+                    disabled={isLoading}
+                  />
+                  {isLoadingMetadata && (
+                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                      <div className="animate-spin h-4 w-4 border-2 border-primary-500 border-t-transparent rounded-full"></div>
+                    </div>
+                  )}
+                </div>
+                <p className="text-xs text-gray-500 mt-1">
+                  Enter your website URL -{" "}
+                  <strong>we'll automatically fill in your company info</strong>
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label
+                    htmlFor="companyName"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
+                    Company Name *
+                  </label>
+                  <input
+                    type="text"
+                    id="companyName"
+                    required
+                    value={formData.companyName}
+                    onChange={(e) =>
+                      setFormData({ ...formData, companyName: e.target.value })
+                    }
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    placeholder="Your Company"
+                    disabled={isLoading}
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="category"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
+                    Company Category *
+                  </label>
+                  <select
+                    id="category"
+                    required
+                    value={formData.category}
+                    onChange={(e) =>
+                      setFormData({ ...formData, category: e.target.value })
+                    }
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                     disabled={isLoading}
                   >
-                    {showPassword ? <EyeSlash size={20} /> : <Eye size={20} />}
-                  </button>
+                    <option value="">Select your company category</option>
+                    {getCategoryOptions().map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
 
               <div>
                 <label
-                  htmlFor="confirmPassword"
+                  htmlFor="companyDescription"
                   className="block text-sm font-medium text-gray-700 mb-2"
                 >
-                  Confirm Password *
+                  Company Description
                 </label>
-                <div className="relative">
+                <textarea
+                  id="companyDescription"
+                  rows={3}
+                  value={formData.companyDescription}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      companyDescription: e.target.value,
+                    })
+                  }
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
+                  placeholder="Brief description of your company (optional)"
+                  disabled={isLoading}
+                  maxLength={160}
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  This will be used as your first ad description (
+                  {formData.companyDescription.length}/160 characters)
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  First Ad Image
+                </label>
+                <div className="flex rounded-lg border border-gray-300 overflow-hidden">
                   <input
-                    type={showConfirmPassword ? "text" : "password"}
-                    id="confirmPassword"
-                    required
-                    value={formData.confirmPassword}
+                    type="url"
+                    value={formData.firstAdImage}
                     onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        confirmPassword: e.target.value,
-                      })
+                      setFormData({ ...formData, firstAdImage: e.target.value })
                     }
-                    className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                    placeholder="Repeat password"
+                    className="flex-1 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    placeholder="Or paste image URL directly"
                     disabled={isLoading}
+                  />
+                  <input
+                    ref={adImageInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleAdImageFileSelect}
+                    className="hidden"
                   />
                   <button
                     type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                    disabled={isLoading}
+                    onClick={() => adImageInputRef.current?.click()}
+                    disabled={isUploadingAdImage || isLoading}
+                    className="px-4 bg-gray-50 border-l border-gray-300 text-gray-600 hover:bg-gray-100 disabled:opacity-50 transition-colors"
                   >
-                    {showConfirmPassword ? (
-                      <EyeSlash size={20} />
-                    ) : (
-                      <Eye size={20} />
-                    )}
+                    {isUploadingAdImage ? "Uploading..." : <Upload size={16} />}
                   </button>
                 </div>
+                <p className="text-xs text-gray-500 mt-1">
+                  Upload screenshot, logo, or full ad image (max 5MB) •
+                  Auto-filled from website's social image
+                </p>
               </div>
             </div>
 

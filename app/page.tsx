@@ -20,6 +20,7 @@ import {
   Code,
   PaintBrush,
   ChartBar,
+  RocketIcon,
 } from "@phosphor-icons/react";
 
 export default function Home() {
@@ -113,22 +114,29 @@ export default function Home() {
                 onSubmit={handleInviteRequest}
                 className="flex flex-col sm:flex-row gap-4 items-start sm:items-center mt-4"
               >
-                <input
+                {/* <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
                   required
                   className="px-4 py-5 bg-white text-black w-full sm:w-60"
-                />
-                <button
+                /> */}
+                {/* <button
                   type="submit"
                   disabled={isSubmitting}
                   className="bg-[#5C6657] text-white font-serif text-lg sm:text-xl lg:text-2xl px-6 sm:px-8 py-3 sm:py-4 hover:bg-[#4a523f] transition-colors flex items-center gap-4 disabled:opacity-50"
                 >
                   {isSubmitting ? "Requesting..." : "Request Invite"}
                   <MailboxIcon size={24} className="sm:w-8 sm:h-8" />
-                </button>
+                </button> */}
+                <Link
+                  href={"/register"}
+                  className="bg-[#5C6657] text-white font-serif text-lg sm:text-xl lg:text-2xl px-6 sm:px-8 py-3 sm:py-4 hover:bg-[#4a523f] transition-colors flex items-center gap-4 disabled:opacity-50"
+                >
+                  Sign Up for Free
+                  <RocketIcon size={24} className="sm:w-8 sm:h-8" />
+                </Link>
               </form>
               {message && (
                 <p
@@ -1070,7 +1078,7 @@ export default function Home() {
             onSubmit={handleInviteRequest}
             className="flex flex-col sm:flex-row gap-4 items-center justify-center"
           >
-            <input
+            {/* <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -1085,7 +1093,14 @@ export default function Home() {
             >
               {isSubmitting ? "Requesting..." : "Request Invite"}
               <MailboxIcon size={24} className="sm:w-8 sm:h-8" />
-            </button>
+            </button> */}
+            <Link
+              href={"/register"}
+              className="bg-[#5C6657] text-white font-serif text-lg sm:text-xl lg:text-2xl px-6 sm:px-8 py-3 sm:py-4 hover:bg-[#4a523f] transition-colors flex items-center gap-4 disabled:opacity-50"
+            >
+              Sign Up for Free
+              <RocketIcon size={24} className="sm:w-8 sm:h-8" />
+            </Link>
           </form>
           {message && (
             <p
