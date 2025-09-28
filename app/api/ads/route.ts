@@ -25,6 +25,7 @@ export async function GET(request: NextRequest) {
         include: {
           user: {
             select: {
+              id: true,
               companyName: true,
               profilePic: true,
               karma: true,

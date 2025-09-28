@@ -21,7 +21,9 @@ import {
   PaintBrush,
   ChartBar,
   RocketIcon,
+  LinkIcon,
 } from "@phosphor-icons/react";
+import { createAdSlug, createCompanySlug } from "@/app/lib/slugs";
 
 export default function Home() {
   const { user } = useAuth();
@@ -853,7 +855,7 @@ export default function Home() {
 
             {loading ? (
               <div className="text-center py-12">
-                <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
+                <div className="inline-block animate-spin  h-12 w-12 border-b-2 border-primary-500"></div>
                 <p className="mt-4 text-slate-600 font-sans">
                   Loading network ads...
                 </p>
@@ -888,7 +890,7 @@ export default function Home() {
                           className="relative h-32 bg-gradient-to-br from-primary-100 to-accent-100 flex items-center justify-center cursor-pointer"
                           onClick={() => window.open(ad.linkUrl, "_blank")}
                         >
-                          <div className="w-16 h-16 bg-white/80 rounded-lg flex items-center justify-center">
+                          <div className="w-16 h-16 bg-white/80  flex items-center justify-center">
                             <span className="text-2xl">🚀</span>
                           </div>
 
@@ -917,16 +919,25 @@ export default function Home() {
                             <img
                               src={ad.user.profilePic}
                               alt={ad.user.companyName}
-                              className="w-6 h-6 rounded-full object-cover"
+                              className="w-6 h-6  object-cover"
                             />
                           ) : (
                             <></>
                           )}
 
                           <p className="font-sans text-xs text-slate-500 truncate">
-                            Message the founder of {ad.user.companyName} (
-                            {ad.user.karma} karma)
-                            {/** Add Info Hyperlink for explanation */}
+                            Message the founder of{" "}
+                            <Link
+                              href={`/companies/${createCompanySlug(
+                                ad.user.companyName,
+                                ad.user.id
+                              )}`}
+                              className="text-primary-600 hover:text-primary-700 font-medium"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              {ad.user.companyName}
+                            </Link>{" "}
+                            ({ad.user.karma} karma)
                           </p>
                         </div>
                         <div className="flex items-center justify-between">
@@ -1009,7 +1020,7 @@ export default function Home() {
 
             {loading ? (
               <div className="text-center py-12">
-                <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-accent-500"></div>
+                <div className="inline-block animate-spin  h-12 w-12 border-b-2 border-accent-500"></div>
                 <p className="mt-4 text-slate-600 font-sans">
                   Loading network members...
                 </p>
@@ -1020,9 +1031,13 @@ export default function Home() {
                   {networkUsers
                     .slice(0, 12)
                     .map((member: any, index: number) => (
-                      <div
+                      <Link
                         key={member.id}
-                        className="text-center group cursor-pointer"
+                        href={`/companies/${createCompanySlug(
+                          member.companyName,
+                          member.id
+                        )}`}
+                        className="text-center group cursor-pointer block"
                       >
                         <div className="relative mb-4 mx-auto w-20 h-20 bg-gradient-to-br from-accent-200 to-primary-200 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                           {member.profilePic ? (
@@ -1045,7 +1060,7 @@ export default function Home() {
                         <p className="font-sans text-xs text-slate-500 mt-1">
                           {member.karma} karma
                         </p>
-                      </div>
+                      </Link>
                     ))}
                 </div>
 
@@ -1065,6 +1080,181 @@ export default function Home() {
               </>
             )}
           </div>
+        </div>
+      </section>
+
+      {/* SEO Benefits Section */}
+      <section className="seo-benefits py-16 sm:py-24 bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 relative overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0">
+          <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_20%,rgba(241,255,137,0.15),transparent_40%)]"></div>
+          <div className="absolute top-1/3 right-0 w-96 h-96 bg-[radial-gradient(circle_at_70%_30%,rgba(60,255,102,0.1),transparent_50%)]"></div>
+          <div className="absolute bottom-0 left-1/4 w-64 h-64 bg-[radial-gradient(circle_at_50%_50%,rgba(241,255,137,0.08),transparent_50%)]"></div>
+        </div>
+
+        <div className="relative px-4 sm:px-10 max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-5xl sm:text-7xl md:text-8xl lg:text-[120px] leading-tight font-bold text-white mb-6">
+              SEO
+              <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#F1FF89] via-[#3CFF66] to-[#F1FF89]">
+                Superpower
+              </span>
+            </h2>
+            <p className="text-xl sm:text-2xl text-white/90 font-sans max-w-4xl mx-auto leading-relaxed">
+              Every ad and company gets a dedicated page that boosts your search
+              engine visibility and creates valuable backlinks
+            </p>
+          </div>
+
+          {/* Feature Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+            {/* Dedicated Pages Feature */}
+            <div className="relative">
+              <div className="bg-white/95 backdrop-blur-sm  border-2 border-[#F1FF89]/30 p-8 h-full shadow-xl">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-14 h-14 bg-gradient-to-br from-[#F1FF89] to-[#3CFF66] rounded-full flex items-center justify-center shadow-lg">
+                    <LinkIcon size={28} className="text-primary-800" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-primary-800">
+                    Dedicated Pages
+                  </h3>
+                </div>
+                <p className="text-primary-700 text-lg mb-6 leading-relaxed">
+                  Your ads and company profile get their own unique URLs that
+                  search engines can index and rank.
+                </p>
+
+                {/* Example URLs */}
+                <div className="space-y-3">
+                  <div className="bg-primary-50  p-4 border border-[#F1FF89]/50">
+                    <div className="text-primary-600 text-sm font-mono mb-1 font-semibold">
+                      Ad Page Example:
+                    </div>
+                    <div className="text-primary-800 font-mono text-sm break-all font-medium">
+                      commonadnetwork.com/ads/api-monitoring-tool-cm1x2y3z
+                    </div>
+                  </div>
+                  <div className="bg-accent-50  p-4 border border-[#3CFF66]/50">
+                    <div className="text-accent-600 text-sm font-mono mb-1 font-semibold">
+                      Company Page Example:
+                    </div>
+                    <div className="text-primary-800 font-mono text-sm break-all font-medium">
+                      commonadnetwork.com/companies/stunts-inc-cm1x2y3z
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* SEO Benefits Feature */}
+            <div className="relative">
+              <div className="bg-white/95 backdrop-blur-sm  border-2 border-[#3CFF66]/30 p-8 h-full shadow-xl">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-14 h-14 bg-gradient-to-br from-[#3CFF66] to-[#F1FF89] rounded-full flex items-center justify-center shadow-lg">
+                    <TrendUp size={28} className="text-primary-800" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-primary-800">
+                    SEO Benefits
+                  </h3>
+                </div>
+                <div className="space-y-4">
+                  {[
+                    { icon: "🔍", text: "Better search engine rankings" },
+                    { icon: "🔗", text: "High-quality backlinks to your site" },
+                    { icon: "📈", text: "Increased organic traffic" },
+                    { icon: "🌐", text: "Professional online presence" },
+                    {
+                      icon: "⚡",
+                      text: "Fast-loading, mobile-optimized pages",
+                    },
+                    { icon: "🎯", text: "Targeted keyword optimization" },
+                  ].map((benefit, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center gap-3 text-primary-700"
+                    >
+                      <span className="text-xl">{benefit.icon}</span>
+                      <span className="text-lg font-medium">
+                        {benefit.text}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Visual Demonstration */}
+          {/* <div className="max-w-2xl mx-auto bg-white/95 backdrop-blur-sm  border-2 border-white/50 p-8 shadow-xl">
+            <h3 className="text-2xl font-bold text-primary-800 text-center mb-8">
+              See the Power in Action
+            </h3>
+
+            <div className="flex flex-row items-center justify-between gap-6">
+              <div className="text-center">
+                <div className="bg-red-100 border-2 border-red-300  p-4 mb-4">
+                  <div className="text-red-700 font-bold mb-2">
+                    Without Dedicated Pages
+                  </div>
+                  <div className="text-red-600 text-sm space-y-1 font-medium">
+                    <div>❌ No search visibility</div>
+                    <div>❌ No backlinks</div>
+                    <div>❌ Limited discoverability</div>
+                  </div>
+                </div>
+                <div className="text-primary-600 text-sm font-medium">
+                  Traditional ad networks
+                </div>
+              </div>
+
+              <div className="flex items-center justify-center">
+                <ArrowRight
+                  size={32}
+                  className="text-primary-400 hidden md:block"
+                />
+                <div className="text-primary-400 md:hidden text-2xl">↓</div>
+              </div>
+
+              <div className="text-center">
+                <div className="bg-green-100 border-2 border-[#3CFF66]  p-4 mb-4">
+                  <div className="text-green-700 font-bold mb-2">
+                    With Common Ad Network
+                  </div>
+                  <div className="text-green-600 text-sm space-y-1 font-medium">
+                    <div>✅ Google indexable pages</div>
+                    <div>✅ Quality backlinks</div>
+                    <div>✅ SEO-optimized content</div>
+                  </div>
+                </div>
+                <div className="text-primary-600 text-sm font-medium">
+                  Our approach
+                </div>
+              </div>
+            </div>
+          </div> */}
+
+          {/* Call to Action */}
+          {/* <div className="text-center">
+            <div className="inline-flex flex-col sm:flex-row items-center gap-6 bg-gradient-to-r from-[#F1FF89] to-[#3CFF66]  p-8 shadow-2xl border-2 border-white/30">
+              <div className="text-center sm:text-left">
+                <h4 className="text-2xl font-bold text-primary-800 mb-2">
+                  Ready to Boost Your SEO?
+                </h4>
+                <p className="text-primary-700 font-medium">
+                  Join hundreds of indie makers already benefiting from
+                  dedicated SEO pages
+                </p>
+              </div>
+              <Link
+                href="/register"
+                className="bg-primary-600 text-white px-8 py-4  font-bold text-lg hover:bg-primary-700 hover:shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center gap-2 border border-primary-500"
+              >
+                Get SEO Benefits
+                <RocketIcon size={24} />
+              </Link>
+            </div>
+          </div> */}
         </div>
       </section>
 

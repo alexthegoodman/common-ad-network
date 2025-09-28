@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Eye, HandPointingIcon, Trash } from "@phosphor-icons/react";
+import Link from "next/link";
+import { Eye, HandPointingIcon, Trash, Info } from "@phosphor-icons/react";
+import { createAdSlug } from "@/app/lib/slugs";
 
 interface Ad {
   id: string;
@@ -108,21 +110,31 @@ export default function AdCard({
           {ad.description}
         </p>
 
-        {showStats && (
-          <div className="flex gap-4 text-xs text-gray-500 pt-3 border-t border-gray-100">
-            <div className="flex items-center gap-1">
-              <Eye size={12} />
-              <span>{ad.impressions.toLocaleString()} views</span>
+        <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+          {showStats && (
+            <div className="flex gap-4 text-xs text-gray-500">
+              <div className="flex items-center gap-1">
+                <Eye size={12} />
+                <span>{ad.impressions.toLocaleString()} views</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <HandPointingIcon size={12} />
+                <span>{ad.clicks} clicks</span>
+              </div>
+              <div>
+                <span className="font-medium">{ctr}% CTR</span>
+              </div>
             </div>
-            <div className="flex items-center gap-1">
-              <HandPointingIcon size={12} />
-              <span>{ad.clicks} clicks</span>
-            </div>
-            <div>
-              <span className="font-medium">{ctr}% CTR</span>
-            </div>
-          </div>
-        )}
+          )}
+          <Link
+            href={`/ads/${createAdSlug(ad.headline, ad.id)}`}
+            onClick={(e) => e.stopPropagation()}
+            className="text-xs text-primary-600 hover:text-primary-700 flex items-center gap-1 font-medium"
+          >
+            <Info size={12} />
+            View Details
+          </Link>
+        </div>
       </div>
     </div>
   );
