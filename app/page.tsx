@@ -102,14 +102,17 @@ export default function Home() {
       <section className="hero w-full">
         <div className="flex flex-col lg:flex-row">
           <div className="left w-full lg:w-1/2 bg-primary-500 p-8 sm:p-12 lg:p-20">
-            <h1 className="block text-4xl sm:text-6xl md:text-8xl lg:text-[164px] leading-tight lg:leading-[188px] text-white mb-6">
+            {/* <h1 className="block text-4xl sm:text-6xl md:text-8xl lg:text-[164px] leading-tight lg:leading-[188px] text-white mb-6">
               <span className="text-[#F1FF89]">Give</span> clicks,{" "}
               <span className="text-[#F1FF89]">Get</span> clicks
+            </h1> */}
+            <h1 className="block text-4xl sm:text-6xl md:text-8xl lg:text-[164px] leading-tight lg:leading-[188px] text-white mb-6">
+              <span className="text-[#F1FF89]">Golden rule</span> Give first
             </h1>
             <p className="text-base sm:text-lg md:text-xl lg:text-[24px] leading-relaxed lg:leading-[46px] text-white font-sans">
-              With Common Ad Network, indie makers can support each other
-              through mutual advertising. By allowing ads to display on your
-              site, you will earn a place on others.
+              With Common Ad Network, indie makers support each other through
+              ads, surveys, and launch promotions. Earn karma by engaging with
+              content and spend it to promote your products across the network.
             </p>
             <div className="relative">
               <form
@@ -301,8 +304,9 @@ export default function Home() {
                 <span className="text-lg">Earn Karma</span>
                 <hr className="w-4" />
                 <p className="text-sm sm:text-base">
-                  Display ads on your site and earn karma based on genuine
-                  clicks. Higher CTR = more karma rewards.
+                  Earn karma by clicking ads, responding to surveys, and
+                  engaging with the community. Optional: embed ads for
+                  additional rewards.
                 </p>
               </div>
             </div>
@@ -312,8 +316,8 @@ export default function Home() {
                 <span className="text-lg">Spend Karma</span>
                 <hr className="w-4" />
                 <p className="text-sm sm:text-base">
-                  Use your earned karma to promote your own products across the
-                  entire network of indie maker sites.
+                  Use karma to promote ads, launch surveys for customer
+                  research, or showcase new products on our launch leaderboard.
                 </p>
               </div>
             </div>
@@ -510,19 +514,19 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Special Ad Types Section */}
-      {/* <section className="special-ads pt-8 sm:pt-16 pb-10 sm:pb-20 bg-slate-50">
+      {/* Special Content Types Section */}
+      <section className="special-content pt-8 sm:pt-16 pb-10 sm:pb-20 bg-slate-50">
         <div className="px-4 sm:px-10">
           <div className="mx-auto max-w-7xl">
             <div className="text-center mb-12 sm:mb-16">
               <h2 className="text-4xl sm:text-6xl md:text-8xl lg:text-[128px] leading-tight lg:leading-[154px] text-slate-700 mb-6">
-                Special
+                Beyond
                 <br />
-                <span className="text-primary-500">Ad Types</span>
+                <span className="text-primary-500">Just Ads</span>
               </h2>
               <p className="text-lg sm:text-xl lg:text-2xl text-slate-600 font-sans max-w-3xl mx-auto">
-                In addition to image ads and text ads, engage your audience with
-                interactive experiences that drive real results.
+                Engage with the indie maker community through surveys for
+                customer research and launch showcases for maximum visibility.
               </p>
             </div>
 
@@ -536,27 +540,27 @@ export default function Home() {
                       : "text-slate-600 hover:bg-slate-100"
                   }`}
                 >
-                  Surveys & Polls
+                  Customer Surveys
                 </button>
                 <button
-                  onClick={() => setActiveTab("email")}
+                  onClick={() => setActiveTab("launches")}
                   className={`px-6 py-3 font-sans font-medium transition-all ${
-                    activeTab === "email"
+                    activeTab === "launches"
                       ? "bg-primary-500 text-white"
                       : "text-slate-600 hover:bg-slate-100"
                   }`}
                 >
-                  Email Collection
+                  Launch Showcase
                 </button>
                 <button
-                  onClick={() => setActiveTab("download")}
+                  onClick={() => setActiveTab("engagement")}
                   className={`px-6 py-3 font-sans font-medium transition-all ${
-                    activeTab === "download"
+                    activeTab === "engagement"
                       ? "bg-primary-500 text-white"
                       : "text-slate-600 hover:bg-slate-100"
                   }`}
                 >
-                  Downloadable Incentives
+                  Engagement Rewards
                 </button>
               </div>
             </div>
@@ -567,25 +571,25 @@ export default function Home() {
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
                     <div>
                       <h3 className="text-2xl sm:text-3xl font-bold text-slate-800 mb-4 font-sans">
-                        Engage with Surveys & Polls
+                        Customer Research Surveys
                       </h3>
                       <p className="text-slate-600 font-sans text-lg leading-relaxed mb-6">
-                        Collect valuable insights from your audience while
-                        providing an interactive experience that drives
-                        engagement.
+                        Get valuable feedback directly from the indie maker
+                        community. Create surveys to validate ideas, test
+                        concepts, and understand your target market better.
                       </p>
                       <ul className="space-y-3 text-slate-600 font-sans">
                         <li className="flex items-center gap-3">
                           <CheckCircle size={20} className="text-green-500" />
-                          Real-time poll results
+                          Target specific maker demographics
                         </li>
                         <li className="flex items-center gap-3">
                           <CheckCircle size={20} className="text-green-500" />
-                          Multiple choice questions
+                          Real-time response analytics
                         </li>
                         <li className="flex items-center gap-3">
                           <CheckCircle size={20} className="text-green-500" />
-                          Audience insights dashboard
+                          High-quality indie maker insights
                         </li>
                       </ul>
                     </div>
@@ -642,85 +646,30 @@ export default function Home() {
                 </div>
               )}
 
-              {activeTab === "email" && (
+              {activeTab === "launches" && (
                 <div className="p-8 sm:p-12">
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
                     <div>
                       <h3 className="text-2xl sm:text-3xl font-bold text-slate-800 mb-4 font-sans">
-                        Build Your Email List
+                        Launch Showcase Leaderboard
                       </h3>
                       <p className="text-slate-600 font-sans text-lg leading-relaxed mb-6">
-                        Convert visitors into subscribers with compelling email
-                        capture forms that offer real value.
+                        Promote your new products and launches to the entire
+                        indie maker community. Get maximum visibility on our
+                        shuffled daily leaderboard.
                       </p>
                       <ul className="space-y-3 text-slate-600 font-sans">
                         <li className="flex items-center gap-3">
                           <CheckCircle size={20} className="text-green-500" />
-                          Custom form designs
+                          Featured on homepage leaderboard
                         </li>
                         <li className="flex items-center gap-3">
                           <CheckCircle size={20} className="text-green-500" />
-                          Double opt-in compliance
+                          Daily shuffled positioning
                         </li>
                         <li className="flex items-center gap-3">
                           <CheckCircle size={20} className="text-green-500" />
-                          Integration with email tools
-                        </li>
-                      </ul>
-                    </div>
-                    <div className="bg-gradient-to-br from-green-50 to-emerald-100 p-6 border border-green-200">
-                      <div className="bg-white p-6 border border-green-300">
-                        <div className="text-center mb-4">
-                          <h4 className="font-sans font-bold text-slate-800 text-xl mb-2">
-                            Get Weekly Indie Maker Tips
-                          </h4>
-                          <p className="font-sans text-sm text-slate-600">
-                            Join 2,500+ makers getting actionable insights every
-                            Tuesday
-                          </p>
-                        </div>
-                        <form className="space-y-3">
-                          <input
-                            type="email"
-                            placeholder="Enter your email address"
-                            className="w-full px-4 py-3 border border-slate-300 font-sans text-sm focus:border-green-500 focus:outline-none"
-                          />
-                          <button className="w-full bg-green-500 text-white py-3 font-sans font-medium hover:bg-green-600 transition-colors">
-                            Subscribe Now
-                          </button>
-                        </form>
-                        <p className="font-sans text-xs text-slate-500 text-center mt-3">
-                          No spam. Unsubscribe anytime.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {activeTab === "download" && (
-                <div className="p-8 sm:p-12">
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-                    <div>
-                      <h3 className="text-2xl sm:text-3xl font-bold text-slate-800 mb-4 font-sans">
-                        Offer Valuable Downloads
-                      </h3>
-                      <p className="text-slate-600 font-sans text-lg leading-relaxed mb-6">
-                        Provide immediate value with downloadable resources that
-                        capture leads and showcase your expertise.
-                      </p>
-                      <ul className="space-y-3 text-slate-600 font-sans">
-                        <li className="flex items-center gap-3">
-                          <CheckCircle size={20} className="text-green-500" />
-                          PDF guides & checklists
-                        </li>
-                        <li className="flex items-center gap-3">
-                          <CheckCircle size={20} className="text-green-500" />
-                          Code templates & tools
-                        </li>
-                        <li className="flex items-center gap-3">
-                          <CheckCircle size={20} className="text-green-500" />
-                          Exclusive content access
+                          Direct maker-to-maker engagement
                         </li>
                       </ul>
                     </div>
@@ -728,32 +677,107 @@ export default function Home() {
                       <div className="bg-white p-6 border border-purple-300">
                         <div className="text-center mb-4">
                           <div className="w-16 h-16 bg-purple-500 mx-auto mb-3 flex items-center justify-center">
-                            <span className="text-white font-bold text-xl">
-                              PDF
-                            </span>
+                            <RocketIcon size={28} className="text-white" />
                           </div>
                           <h4 className="font-sans font-bold text-slate-800 text-xl mb-2">
-                            The Complete SaaS Launch Checklist
+                            🚀 Today's Launch Leaderboard
                           </h4>
                           <p className="font-sans text-sm text-slate-600 mb-4">
-                            47-point checklist used by successful indie makers
-                            to launch their products
+                            Fresh indie products launching this week
                           </p>
                         </div>
-                        <form className="space-y-3">
-                          <input
-                            type="email"
-                            placeholder="Enter your email for instant download"
-                            className="w-full px-4 py-3 border border-slate-300 font-sans text-sm focus:border-purple-500 focus:outline-none"
-                          />
-                          <button className="w-full bg-purple-500 text-white py-3 font-sans font-medium hover:bg-purple-600 transition-colors">
-                            Download Free Checklist
-                          </button>
-                        </form>
-                        <div className="flex items-center justify-center gap-2 mt-3 text-slate-500 text-xs">
-                          <span>✓ Instant download</span>
-                          <span>•</span>
-                          <span>✓ No spam</span>
+                        <div className="space-y-3">
+                          {[
+                            { rank: 1, name: "TaskFlow Pro", votes: 47 },
+                            { rank: 2, name: "CodeSnap", votes: 32 },
+                            { rank: 3, name: "MakerMetrics", votes: 28 },
+                          ].map((launch, index) => (
+                            <div
+                              key={index}
+                              className="flex items-center justify-between p-3 bg-slate-50 border border-slate-200"
+                            >
+                              <div className="flex items-center gap-3">
+                                <span className="font-bold text-purple-600">
+                                  #{launch.rank}
+                                </span>
+                                <span className="font-sans text-sm font-medium">
+                                  {launch.name}
+                                </span>
+                              </div>
+                              <span className="font-sans text-xs text-slate-500">
+                                {launch.votes} clicks
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === "engagement" && (
+                <div className="p-8 sm:p-12">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+                    <div>
+                      <h3 className="text-2xl sm:text-3xl font-bold text-slate-800 mb-4 font-sans">
+                        Earn Karma Through Engagement
+                      </h3>
+                      <p className="text-slate-600 font-sans text-lg leading-relaxed mb-6">
+                        No need to embed ads on your site! Earn karma by
+                        actively participating in the community through clicks
+                        and survey responses.
+                      </p>
+                      <ul className="space-y-3 text-slate-600 font-sans">
+                        <li className="flex items-center gap-3">
+                          <CheckCircle size={20} className="text-green-500" />
+                          Click ads to earn karma points
+                        </li>
+                        <li className="flex items-center gap-3">
+                          <CheckCircle size={20} className="text-green-500" />
+                          Complete surveys for bonus rewards
+                        </li>
+                        <li className="flex items-center gap-3">
+                          <CheckCircle size={20} className="text-green-500" />
+                          Optional: embed ads for extra karma
+                        </li>
+                      </ul>
+                    </div>
+                    <div className="bg-gradient-to-br from-green-50 to-emerald-100 p-6 border border-green-200">
+                      <div className="bg-white p-6 border border-green-300">
+                        <div className="text-center mb-6">
+                          <div className="w-16 h-16 bg-green-500 mx-auto mb-3 flex items-center justify-center">
+                            <TrophyIcon size={28} className="text-white" />
+                          </div>
+                          <h4 className="font-sans font-bold text-slate-800 text-xl mb-2">
+                            Ways to Earn Karma
+                          </h4>
+                        </div>
+                        <div className="space-y-4">
+                          <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200">
+                            <span className="font-sans text-sm font-medium">
+                              Click on ads
+                            </span>
+                            <span className="font-sans text-xs text-green-600 font-bold">
+                              +5 karma
+                            </span>
+                          </div>
+                          <div className="flex items-center justify-between p-3 bg-blue-50 border border-blue-200">
+                            <span className="font-sans text-sm font-medium">
+                              Complete survey
+                            </span>
+                            <span className="font-sans text-xs text-blue-600 font-bold">
+                              +15 karma
+                            </span>
+                          </div>
+                          <div className="flex items-center justify-between p-3 bg-purple-50 border border-purple-200">
+                            <span className="font-sans text-sm font-medium">
+                              Embed ads (optional)
+                            </span>
+                            <span className="font-sans text-xs text-purple-600 font-bold">
+                              1 to 40 Karma (per click)
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -763,7 +787,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section> */}
+      </section>
 
       {/* Karma System Explanation */}
       <div className="px-4 sm:px-10 mb-10 sm:mb-20">
