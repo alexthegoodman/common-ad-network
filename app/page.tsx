@@ -886,11 +886,11 @@ export default function Home() {
               </div>
             ) : (
               <>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+                <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 sm:gap-6 space-y-4 sm:space-y-6">
                   {networkAds.slice(0, 8).map((ad: any) => (
                     <div
                       key={ad.id}
-                      className="bg-white border-2 border-slate-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 group "
+                      className="bg-white border-2 border-slate-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 group break-inside-avoid mb-4 sm:mb-6"
                     >
                       {ad.imageUrl ? (
                         <div
@@ -1043,9 +1043,9 @@ export default function Home() {
                                     rows={1}
                                     readOnly
                                     // onClick, will open an email input and message textarea 2 rows
-                                    onClick={() =>
-                                      setMessageDisplay(!messageDisplay)
-                                    }
+                                    // onClick={() =>
+                                    //   setMessageDisplay(!messageDisplay)
+                                    // }
                                     defaultValue={
                                       "I saw your ad and would like to connect..."
                                     }
@@ -1196,13 +1196,13 @@ export default function Home() {
                     Dedicated Pages
                   </h3>
                 </div>
-                <p className="text-primary-700 text-lg mb-6 leading-relaxed">
+                <p className="font-sans text-primary-700 text-lg mb-6 leading-relaxed">
                   Your ads and company profile get their own unique URLs that
                   search engines can index and rank.
                 </p>
 
                 {/* Example URLs */}
-                <div className="space-y-3">
+                <div className="sfont-sans pace-y-3">
                   <div className="bg-primary-50  p-4 border border-[#F1FF89]/50">
                     <div className="text-primary-600 text-sm font-mono mb-1 font-semibold">
                       Ad Page Example:
@@ -1234,7 +1234,7 @@ export default function Home() {
                     SEO Benefits
                   </h3>
                 </div>
-                <div className="space-y-4">
+                <div className="font-sans space-y-4">
                   {[
                     { icon: "🔍", text: "Better search engine rankings" },
                     { icon: "🔗", text: "High-quality backlinks to your site" },
