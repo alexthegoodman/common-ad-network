@@ -110,9 +110,10 @@ export default function Home() {
               <span className="text-[#F1FF89]">Golden rule</span> Give first
             </h1>
             <p className="text-base sm:text-lg md:text-xl lg:text-[24px] leading-relaxed lg:leading-[46px] text-white font-sans">
+              Common Ad Network is designed to be the underdog's free
+              distribution network, and is designed to support smaller makers.
               With Common Ad Network, indie makers support each other through
-              ads, surveys, and launch promotions. Earn karma by engaging with
-              content and spend it to promote your products across the network.
+              ads, surveys, and launch promotions.
             </p>
             <div className="relative">
               <form
@@ -292,7 +293,7 @@ export default function Home() {
         </div>
       </section>
       {/* How It Works Section */}
-      <section className="how mt-10 sm:mt-20 mb-10 sm:mb-20">
+      <section className="how mt-10 sm:mt-20">
         <div>
           <div className="w-full sm:w-[300px] text-center mx-auto sm:ml-10 p-4 bg-primary-500">
             <h1 className="text-5xl sm:text-7xl text-[#F1FF89]">How?</h1>
@@ -336,8 +337,18 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Indie Makers Section */}
+      <div className="bg-white py-10 sm:pt-24 sm:pb-20 px-4 sm:px-10">
+        <h1 className="text-4xl sm:text-5xl italic md:text-6xl lg:text-7xl text-center text-slate-800 font-sans font-bold mb-12 sm:mb-16">
+          "Indie Makers Depend On Each Other"
+        </h1>
+        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-center text-slate-700 font-sans">
+          - Unknown
+        </h2>
+      </div>
+
       {/* Smart Targeting Section */}
-      <section className="targeting pb-10 sm:pb-20">
+      <section className="targeting pt-8 sm:pt-16 pb-10 sm:pb-20">
         <div className="px-4 sm:px-10">
           <div className="mx-auto">
             <div className="text-center mb-12 sm:mb-16">
