@@ -895,7 +895,14 @@ export default function Home() {
                       {ad.imageUrl ? (
                         <div
                           className="relative h-32 overflow-hidden cursor-pointer"
-                          onClick={() => window.open(ad.linkUrl, "_blank")}
+                          onClick={() =>
+                            ad.type === "regular" && ad.linkUrl
+                              ? window.open(ad.linkUrl, "_blank")
+                              : window.open(
+                                  `/ads/${createAdSlug(ad.headline, ad.id)}`,
+                                  "_blank"
+                                )
+                          }
                         >
                           <img
                             src={ad.imageUrl}
@@ -905,22 +912,35 @@ export default function Home() {
 
                           <div className="absolute opacity-0 hover:opacity-80 top-0 left-0 right-0 bottom-0 bg-gray-500">
                             <span className="text-white text-xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                              Visit {ad.user.companyName}
+                              {ad.type === "survey"
+                                ? "Take Survey"
+                                : `Visit ${ad.user.companyName}`}
                             </span>
                           </div>
                         </div>
                       ) : (
                         <div
                           className="relative h-32 bg-gradient-to-br from-primary-100 to-accent-100 flex items-center justify-center cursor-pointer"
-                          onClick={() => window.open(ad.linkUrl, "_blank")}
+                          onClick={() =>
+                            ad.type === "regular" && ad.linkUrl
+                              ? window.open(ad.linkUrl, "_blank")
+                              : window.open(
+                                  `/ads/${createAdSlug(ad.headline, ad.id)}`,
+                                  "_blank"
+                                )
+                          }
                         >
                           <div className="w-16 h-16 bg-white/80  flex items-center justify-center">
-                            <span className="text-2xl">🚀</span>
+                            <span className="text-2xl">
+                              {ad.type === "survey" ? "📊" : "🚀"}
+                            </span>
                           </div>
 
                           <div className="absolute opacity-0 hover:opacity-80 top-0 left-0 right-0 bottom-0 bg-gray-500">
                             <span className="text-white text-xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                              Visit {ad.user.companyName}
+                              {ad.type === "survey"
+                                ? "Take Survey"
+                                : `Visit ${ad.user.companyName}`}
                             </span>
                           </div>
                         </div>
@@ -938,75 +958,107 @@ export default function Home() {
                           {ad.description}
                         </p>
 
-                        <div className="flex flex-row items-center gap-2 mt-1 mb-1 ">
-                          {ad.user.profilePic ? (
-                            <img
-                              src={ad.user.profilePic}
-                              alt={ad.user.companyName}
-                              className="w-6 h-6  object-cover"
-                            />
-                          ) : (
-                            <></>
-                          )}
-
-                          <p className="font-sans text-xs text-slate-500 truncate">
-                            Message the founder of{" "}
-                            <Link
-                              href={`/companies/${createCompanySlug(
-                                ad.user.companyName,
-                                ad.user.id
-                              )}`}
-                              className="text-primary-600 hover:text-primary-700 font-medium"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              {ad.user.companyName}
-                            </Link>{" "}
-                            ({ad.user.karma} karma)
-                          </p>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          {messageDisplay ? (
-                            <div className="flex flex-col mt-2 w-full">
-                              <input
-                                type="email"
-                                placeholder="Your email"
-                                className="mb-2 px-3 py-2 border border-slate-300 focus:border-primary-500 focus:outline-none text-sm font-sans"
-                              />
-                              <textarea
-                                placeholder="Your message"
-                                className="mb-2 px-3 py-2 border border-slate-300 focus:border-primary-500 focus:outline-none text-sm font-sans"
-                                rows={2}
-                              ></textarea>
-                              <button
-                                className="self-end bg-primary-500 text-white px-4 py-2 text-sm font-sans hover:bg-primary-600 transition-colors"
-                                // onClick, will send the message to the ad owner email
-                              >
-                                Send
-                              </button>
+                        {ad.type === "survey" && ad.survey && (
+                          <div className="mb-3 p-2 bg-slate-50 border border-slate-200">
+                            <p className="font-sans text-xs font-medium text-slate-700 mb-2">
+                              📊 {ad.survey.question}
+                            </p>
+                            <div className="space-y-1">
+                              {ad.survey.options
+                                .slice(0, 2)
+                                .map((option: string, index: number) => (
+                                  <div
+                                    key={index}
+                                    className="flex items-center gap-2"
+                                  >
+                                    <div className="w-2 h-2 border border-slate-400 rounded-full"></div>
+                                    <span className="font-sans text-xs text-slate-600">
+                                      {option}
+                                    </span>
+                                  </div>
+                                ))}
+                              {ad.survey.options.length > 2 && (
+                                <div className="font-sans text-xs text-slate-500 pl-4">
+                                  +{ad.survey.options.length - 2} more options
+                                </div>
+                              )}
                             </div>
-                          ) : (
-                            <>
-                              <textarea
-                                className="px-3 py-1 bg-slate-100 text-slate-700 text-xs font-sans w-full resize-none border border-slate-200
+                          </div>
+                        )}
+
+                        {ad.type !== "survey" && (
+                          <>
+                            <div className="flex flex-row items-center gap-2 mt-1 mb-1 ">
+                              {ad.user.profilePic ? (
+                                <img
+                                  src={ad.user.profilePic}
+                                  alt={ad.user.companyName}
+                                  className="w-6 h-6  object-cover"
+                                />
+                              ) : (
+                                <></>
+                              )}
+
+                              <p className="font-sans text-xs text-slate-500 truncate">
+                                Message the founder of{" "}
+                                <Link
+                                  href={`/companies/${createCompanySlug(
+                                    ad.user.companyName,
+                                    ad.user.id
+                                  )}`}
+                                  className="text-primary-600 hover:text-primary-700 font-medium"
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  {ad.user.companyName}
+                                </Link>{" "}
+                                ({ad.user.karma} karma)
+                              </p>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              {messageDisplay ? (
+                                <div className="flex flex-col mt-2 w-full">
+                                  <input
+                                    type="email"
+                                    placeholder="Your email"
+                                    className="mb-2 px-3 py-2 border border-slate-300 focus:border-primary-500 focus:outline-none text-sm font-sans"
+                                  />
+                                  <textarea
+                                    placeholder="Your message"
+                                    className="mb-2 px-3 py-2 border border-slate-300 focus:border-primary-500 focus:outline-none text-sm font-sans"
+                                    rows={2}
+                                  ></textarea>
+                                  <button
+                                    className="self-end bg-primary-500 text-white px-4 py-2 text-sm font-sans hover:bg-primary-600 transition-colors"
+                                    // onClick, will send the message to the ad owner email
+                                  >
+                                    Send
+                                  </button>
+                                </div>
+                              ) : (
+                                <>
+                                  <textarea
+                                    className="px-3 py-1 bg-slate-100 text-slate-700 text-xs font-sans w-full resize-none border border-slate-200
                             focus:outline-none focus:border-primary-300
                           "
-                                rows={1}
-                                readOnly
-                                // onClick, will open an email input and message textarea 2 rows
-                                onClick={() =>
-                                  setMessageDisplay(!messageDisplay)
-                                }
-                                defaultValue={
-                                  "I saw your ad and would like to connect..."
-                                }
-                              ></textarea>
-                              <ArrowRight
-                                size={14}
-                                className="text-slate-400 group-hover:text-primary-500 transition-colors"
-                              />
-                            </>
-                          )}
-                        </div>
+                                    rows={1}
+                                    readOnly
+                                    // onClick, will open an email input and message textarea 2 rows
+                                    onClick={() =>
+                                      setMessageDisplay(!messageDisplay)
+                                    }
+                                    defaultValue={
+                                      "I saw your ad and would like to connect..."
+                                    }
+                                  ></textarea>
+                                  <ArrowRight
+                                    size={14}
+                                    className="text-slate-400 group-hover:text-primary-500 transition-colors"
+                                  />
+                                </>
+                              )}
+                            </div>
+                          </>
+                        )}
                       </div>
                     </div>
                   ))}
