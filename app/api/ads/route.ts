@@ -31,6 +31,13 @@ export async function GET(request: NextRequest) {
               karma: true,
             },
           },
+          survey: {
+            select: {
+              id: true,
+              question: true,
+              options: true,
+            },
+          },
         },
         take: limit,
       });
@@ -50,6 +57,13 @@ export async function GET(request: NextRequest) {
               select: {
                 companyName: true,
                 profilePic: true,
+              },
+            },
+            survey: {
+              select: {
+                id: true,
+                question: true,
+                options: true,
               },
             },
           },

@@ -23,6 +23,9 @@ export default function AddAdForm({
     imageUrl: "",
     linkUrl: "",
     category: "",
+    type: "regular",
+    question: "",
+    options: ["", ""],
   });
   const [isLoading, setIsLoading] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -90,6 +93,9 @@ export default function AddAdForm({
         imageUrl: "",
         linkUrl: "",
         category: "",
+        type: "regular",
+        question: "",
+        options: ["", ""],
       });
       onSuccess?.();
       onClose();
@@ -151,6 +157,30 @@ export default function AddAdForm({
 
             <div>
               <label
+                htmlFor="adType"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Ad Type *
+              </label>
+              <select
+                id="adType"
+                required
+                value={formData.type}
+                onChange={(e) =>
+                  setFormData({ ...formData, type: e.target.value })
+                }
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              >
+                <option value="regular">Regular Ad</option>
+                <option value="survey">Survey Ad</option>
+              </select>
+              <p className="text-xs text-gray-500 mt-1">
+                Choose between a regular ad or a survey ad
+              </p>
+            </div>
+
+            <div>
+              <label
                 htmlFor="category"
                 className="block text-sm font-medium text-gray-700 mb-1"
               >
@@ -201,6 +231,83 @@ export default function AddAdForm({
               </p>
             </div>
 
+            {formData.type === "survey" && (
+              <>
+                <div>
+                  <label
+                    htmlFor="question"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    Survey Question *
+                  </label>
+                  <input
+                    type="text"
+                    id="question"
+                    required={formData.type === "survey"}
+                    value={formData.question}
+                    onChange={(e) =>
+                      setFormData({ ...formData, question: e.target.value })
+                    }
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    placeholder="What question do you want to ask?"
+                    maxLength={120}
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    {formData.question.length}/120 characters
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Survey Options *
+                  </label>
+                  {formData.options.map((option, index) => (
+                    <div key={index} className="flex gap-2 mb-2">
+                      <input
+                        type="text"
+                        required={formData.type === "survey"}
+                        value={option}
+                        onChange={(e) => {
+                          const newOptions = [...formData.options];
+                          newOptions[index] = e.target.value;
+                          setFormData({ ...formData, options: newOptions });
+                        }}
+                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                        placeholder={`Option ${index + 1}`}
+                        maxLength={60}
+                      />
+                      {formData.options.length > 2 && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const newOptions = formData.options.filter((_, i) => i !== index);
+                            setFormData({ ...formData, options: newOptions });
+                          }}
+                          className="px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                        >
+                          Remove
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                  {formData.options.length < 5 && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setFormData({ ...formData, options: [...formData.options, ""] });
+                      }}
+                      className="text-sm text-primary-600 hover:text-primary-700 font-medium"
+                    >
+                      + Add option
+                    </button>
+                  )}
+                  <p className="text-xs text-gray-500 mt-1">
+                    Add 2-5 options for your survey (60 characters each)
+                  </p>
+                </div>
+              </>
+            )}
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Image
@@ -237,25 +344,27 @@ export default function AddAdForm({
               </p>
             </div>
 
-            <div>
-              <label
-                htmlFor="linkUrl"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Destination URL *
-              </label>
-              <input
-                type="url"
-                id="linkUrl"
-                required
-                value={formData.linkUrl}
-                onChange={(e) =>
-                  setFormData({ ...formData, linkUrl: e.target.value })
-                }
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                placeholder="https://yoursite.com"
-              />
-            </div>
+            {formData.type === "regular" && (
+              <div>
+                <label
+                  htmlFor="linkUrl"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Destination URL *
+                </label>
+                <input
+                  type="url"
+                  id="linkUrl"
+                  required={formData.type === "regular"}
+                  value={formData.linkUrl}
+                  onChange={(e) =>
+                    setFormData({ ...formData, linkUrl: e.target.value })
+                  }
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  placeholder="https://yoursite.com"
+                />
+              </div>
+            )}
 
             <div>
               <p className="text-sm font-medium text-gray-700 mb-2">Preview</p>
@@ -274,9 +383,35 @@ export default function AddAdForm({
                 <h3 className="font-semibold text-gray-900">
                   {formData.headline || "Your headline"}
                 </h3>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-gray-600 mb-3">
                   {formData.description || "Your description"}
                 </p>
+                
+                {formData.type === "survey" && (
+                  <div className="mt-3 pt-3 border-t border-gray-300">
+                    <p className="text-sm font-medium text-gray-800 mb-2">
+                      {formData.question || "Your survey question"}
+                    </p>
+                    <div className="space-y-2">
+                      {formData.options.filter(opt => opt.trim()).map((option, index) => (
+                        <label key={index} className="flex items-center space-x-2 cursor-pointer">
+                          <input type="radio" name="preview" className="text-primary-600" disabled />
+                          <span className="text-sm text-gray-700">{option || `Option ${index + 1}`}</span>
+                        </label>
+                      ))}
+                      {formData.options.filter(opt => opt.trim()).length === 0 && (
+                        <p className="text-xs text-gray-500">Survey options will appear here</p>
+                      )}
+                    </div>
+                    <button
+                      type="button"
+                      disabled
+                      className="mt-3 px-4 py-2 bg-primary-600 text-white text-sm rounded-lg opacity-60"
+                    >
+                      Submit Response
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
 

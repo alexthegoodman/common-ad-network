@@ -15,13 +15,29 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invalid token" }, { status: 401 });
     }
 
-    const { headline, description, imageUrl, linkUrl, category } = await request.json();
+    const { headline, description, imageUrl, linkUrl, category, type, question, options } = await request.json();
 
-    if (!headline || !description || !linkUrl || !category) {
+    if (!headline || !description || !category || !type) {
       return NextResponse.json(
-        { error: "Headline, description, category, and link URL are required" },
+        { error: "Headline, description, category, and type are required" },
         { status: 400 }
       );
+    }
+
+    if (type === "regular" && !linkUrl) {
+      return NextResponse.json(
+        { error: "Link URL is required for regular ads" },
+        { status: 400 }
+      );
+    }
+
+    if (type === "survey") {
+      if (!question || !options || !Array.isArray(options) || options.length < 2) {
+        return NextResponse.json(
+          { error: "Survey ads require a question and at least 2 options" },
+          { status: 400 }
+        );
+      }
     }
 
     const ad = await prisma.ad.create({
@@ -30,8 +46,9 @@ export async function POST(request: NextRequest) {
         headline,
         description,
         imageUrl,
-        linkUrl,
+        linkUrl: type === "regular" ? linkUrl : null,
         category,
+        type,
       },
       include: {
         user: {
@@ -42,6 +59,16 @@ export async function POST(request: NextRequest) {
         },
       },
     });
+
+    if (type === "survey") {
+      await prisma.survey.create({
+        data: {
+          adId: ad.id,
+          question,
+          options: options.filter((opt: string) => opt.trim()),
+        },
+      });
+    }
 
     return NextResponse.json(
       {

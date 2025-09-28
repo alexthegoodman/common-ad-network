@@ -10,8 +10,9 @@ interface Ad {
   id: string
   headline: string
   description: string
-  imageUrl: string
-  linkUrl: string
+  imageUrl?: string
+  linkUrl?: string
+  type: string
   impressions: number
   clicks: number
   createdAt: string
@@ -19,6 +20,11 @@ interface Ad {
   user: {
     companyName: string
     profilePic?: string
+  }
+  survey?: {
+    id: string
+    question: string
+    options: string[]
   }
 }
 

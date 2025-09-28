@@ -45,8 +45,9 @@ model Ad {
   headline    String
   description String
   imageUrl    String?
-  linkUrl     String
+  linkUrl     String?
   category    String?
+  type        String   @default("regular") // "regular" or "survey"
   isActive    Boolean  @default(true)
   isDeleted   Boolean  @default(false)
   impressions Int      @default(0)
@@ -56,6 +57,7 @@ model Ad {
 
   user       User    @relation(fields: [userId], references: [id])
   clickLogs  Click[]
+  survey     Survey?
 
   @@map("ads")
 }
@@ -121,4 +123,33 @@ model InviteRequest {
   createdAt DateTime @default(now())
 
   @@map("invite_requests")
+}
+
+model Survey {
+  id          String   @id @default(cuid())
+  adId        String   @unique
+  question    String
+  options     String[] // Array of survey options
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  ad        Ad            @relation(fields: [adId], references: [id])
+  responses SurveyResponse[]
+
+  @@map("surveys")
+}
+
+model SurveyResponse {
+  id         String   @id @default(cuid())
+  surveyId   String
+  selectedOption String
+  ipAddress  String
+  userAgent  String?
+  country    String?
+  createdAt  DateTime @default(now())
+
+  survey Survey @relation(fields: [surveyId], references: [id])
+
+  @@unique([surveyId, ipAddress])
+  @@map("survey_responses")
 }

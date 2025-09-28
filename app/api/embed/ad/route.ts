@@ -55,6 +55,13 @@ export async function GET(request: NextRequest) {
             karma: true,
           },
         },
+        survey: {
+          select: {
+            id: true,
+            question: true,
+            options: true,
+          },
+        },
       },
     });
 
@@ -110,6 +117,8 @@ export async function GET(request: NextRequest) {
       description: selectedAd.description,
       imageUrl: selectedAd.imageUrl,
       linkUrl: selectedAd.linkUrl,
+      type: selectedAd.type,
+      survey: selectedAd.survey,
       companyName: selectedAd.user.companyName,
       clickUrl: `${
         process.env.NEXTAUTH_URL || "https://common-ad-network.vercel.app"

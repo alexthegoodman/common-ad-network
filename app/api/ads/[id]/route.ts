@@ -25,6 +25,13 @@ export async function GET(
             karma: true,
           },
         },
+        survey: {
+          select: {
+            id: true,
+            question: true,
+            options: true,
+          },
+        },
       },
     });
 

@@ -64,7 +64,8 @@ export async function GET(request: NextRequest, { params }: { params: any }) {
           adId: params.adId,
         });
         // Still redirect to the ad but don't count the click
-        return NextResponse.redirect(ad.linkUrl);
+        const redirectUrl = ad.linkUrl || `${process.env.NEXTAUTH_URL || "https://common-ad-network.vercel.app"}/ads/${ad.id}`;
+        return NextResponse.redirect(redirectUrl);
       }
 
       // Get location data from IP
@@ -84,7 +85,8 @@ export async function GET(request: NextRequest, { params }: { params: any }) {
           trustScore,
           adId: params.adId,
         });
-        return NextResponse.redirect(ad.linkUrl);
+        const redirectUrl = ad.linkUrl || `${process.env.NEXTAUTH_URL || "https://common-ad-network.vercel.app"}/ads/${ad.id}`;
+        return NextResponse.redirect(redirectUrl);
       }
 
       // Record the valid click
@@ -181,8 +183,9 @@ export async function GET(request: NextRequest, { params }: { params: any }) {
       }
     }
 
-    // Redirect to the actual ad URL
-    return NextResponse.redirect(ad.linkUrl);
+    // Redirect to the actual ad URL or survey page
+    const redirectUrl = ad.linkUrl || `${process.env.NEXTAUTH_URL || "https://common-ad-network.vercel.app"}/ads/${ad.id}`;
+    return NextResponse.redirect(redirectUrl);
   } catch (error) {
     console.error("Click tracking error:", error);
     return NextResponse.redirect("https://example.com"); // Fallback redirect

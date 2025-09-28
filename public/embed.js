@@ -74,10 +74,18 @@
 
   function createAdElement(adData) {
     // Create container
-    var container = document.createElement("a");
-    container.href = adData.clickUrl;
-    container.target = "_blank";
-    container.rel = "noopener noreferrer";
+    var container;
+    
+    if (adData.type === "survey") {
+      container = document.createElement("div");
+      container.style.cursor = "pointer";
+    } else {
+      container = document.createElement("a");
+      container.href = adData.clickUrl;
+      container.target = "_blank";
+      container.rel = "noopener noreferrer";
+    }
+    
     applyStyles(container, defaultStyles.container);
 
     // Add hover effect
@@ -117,6 +125,77 @@
     description.textContent = adData.description;
     applyStyles(description, defaultStyles.description);
 
+    // Create survey section if it's a survey ad
+    var surveySection = null;
+    if (adData.type === "survey" && adData.survey) {
+      surveySection = document.createElement("div");
+      surveySection.style.marginBottom = "12px";
+      surveySection.style.padding = "12px";
+      surveySection.style.backgroundColor = "#f9fafb";
+      surveySection.style.borderRadius = "8px";
+      
+      var surveyQuestion = document.createElement("p");
+      surveyQuestion.textContent = adData.survey.question;
+      surveyQuestion.style.fontSize = "14px";
+      surveyQuestion.style.fontWeight = "600";
+      surveyQuestion.style.color = "#374151";
+      surveyQuestion.style.marginBottom = "8px";
+      
+      var surveyOptions = document.createElement("div");
+      surveyOptions.style.marginBottom = "8px";
+      
+      for (var i = 0; i < Math.min(adData.survey.options.length, 2); i++) {
+        var optionDiv = document.createElement("div");
+        optionDiv.style.display = "flex";
+        optionDiv.style.alignItems = "center";
+        optionDiv.style.marginBottom = "4px";
+        
+        var radio = document.createElement("div");
+        radio.style.width = "12px";
+        radio.style.height = "12px";
+        radio.style.border = "2px solid #d1d5db";
+        radio.style.borderRadius = "50%";
+        radio.style.marginRight = "8px";
+        
+        var optionText = document.createElement("span");
+        optionText.textContent = adData.survey.options[i];
+        optionText.style.fontSize = "12px";
+        optionText.style.color = "#6b7280";
+        
+        optionDiv.appendChild(radio);
+        optionDiv.appendChild(optionText);
+        surveyOptions.appendChild(optionDiv);
+      }
+      
+      if (adData.survey.options.length > 2) {
+        var moreOptions = document.createElement("div");
+        moreOptions.textContent = "+" + (adData.survey.options.length - 2) + " more options";
+        moreOptions.style.fontSize = "11px";
+        moreOptions.style.color = "#9ca3af";
+        moreOptions.style.paddingLeft = "20px";
+        surveyOptions.appendChild(moreOptions);
+      }
+      
+      var participateBtn = document.createElement("button");
+      participateBtn.textContent = "Participate in Survey";
+      participateBtn.style.fontSize = "12px";
+      participateBtn.style.backgroundColor = "#2563eb";
+      participateBtn.style.color = "white";
+      participateBtn.style.padding = "6px 12px";
+      participateBtn.style.border = "none";
+      participateBtn.style.borderRadius = "6px";
+      participateBtn.style.cursor = "pointer";
+      
+      participateBtn.addEventListener("click", function(e) {
+        e.stopPropagation();
+        window.open(adData.clickUrl, "_blank", "noopener,noreferrer");
+      });
+      
+      surveySection.appendChild(surveyQuestion);
+      surveySection.appendChild(surveyOptions);
+      surveySection.appendChild(participateBtn);
+    }
+
     // Create footer
     var footer = document.createElement("div");
     applyStyles(footer, defaultStyles.footer);
@@ -137,6 +216,9 @@
 
     content.appendChild(headline);
     content.appendChild(description);
+    if (surveySection) {
+      content.appendChild(surveySection);
+    }
     content.appendChild(footer);
 
     if (image) {
